@@ -9,6 +9,9 @@
         "prod": "npm run production",
         "production": "mix --production",
         "setup": "bash ./setup.sh",
+        "dropdb": "php artisan db:wipe",
+        "migrate": "bash ./dbMigration.sh",
+        "seed": "php artisan db:seed",
         "serve": "php artisan serve",
         "serveb": "start php artisan serve  && start http://127.0.0.1:8000"
     },

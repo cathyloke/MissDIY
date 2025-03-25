@@ -15,8 +15,9 @@ class SalesDetailsSeeder extends Seeder
      */
     public function run()
     {
-        $productSmartphoneId = DB::table('product')->where('name', 'Smartphone')->value('id');
-        $productTShirtId = DB::table('product')->where('name', 'T-shirt')->value('id');
+        $glueId = DB::table('product')->where('name', 'Multi-Purpose Craft Glue')->value('id');
+        $paintId = DB::table('product')->where('name', 'Acrylic Paint Set')->value('id');
+        $diyBirdhouseId = DB::table('product')->where('name', 'DIY Wooden Birdhouse Kit')->value('id');
         $userId = DB::table('user')->where('name', 'Cathy')->value('id');
         $user2Id = DB::table('user')->where('name', 'Shirley')->value('id');
         
@@ -24,7 +25,7 @@ class SalesDetailsSeeder extends Seeder
             [
                 'id' => uniqid(),
                 'quantity' => 2,
-                'productId' => $productTShirtId,
+                'productId' => $glueId,
                 'salesId' => 'salesAAAAA11111111111',
                 'userId' => $userId,
                 'created_at' => Carbon::now(),
@@ -33,7 +34,7 @@ class SalesDetailsSeeder extends Seeder
             [
                 'id' => uniqid(),
                 'quantity' => 1,
-                'productId' => $productSmartphoneId,
+                'productId' => $paintId,
                 'salesId' => 'salesAAAAA11111111111',
                 'userId' => $userId,
                 'created_at' => Carbon::now(),
@@ -42,7 +43,7 @@ class SalesDetailsSeeder extends Seeder
             [
                 'id' => uniqid(),
                 'quantity' => 2,
-                'productId' => $productTShirtId,
+                'productId' => $diyBirdhouseId,
                 'salesId' => 'salesAAAAA22222222222',
                 'userId' => $user2Id,
                 'created_at' => Carbon::now(),
@@ -51,7 +52,7 @@ class SalesDetailsSeeder extends Seeder
             [
                 'id' => uniqid(),
                 'quantity' => 5,
-                'productId' => $productSmartphoneId,
+                'productId' => $glueId,
                 'salesId' => 'salesAAAAA22222222222',
                 'userId' => $user2Id,
                 'created_at' => Carbon::now(),

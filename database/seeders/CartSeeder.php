@@ -18,15 +18,16 @@ class CartSeeder extends Seeder
         $userId = DB::table('user')->where('name', 'Cathy')->value('id');
         $user2Id = DB::table('user')->where('name', 'Shirley')->value('id');
         
-        $productSmartphoneId = DB::table('product')->where('name', 'Smartphone')->value('id');
-        $productTShirtId = DB::table('product')->where('name', 'T-shirt')->value('id');
+        $glueId = DB::table('product')->where('name', 'Multi-Purpose Craft Glue')->value('id');
+        $paintId = DB::table('product')->where('name', 'Acrylic Paint Set')->value('id');
+        $diyBirdhouseId = DB::table('product')->where('name', 'DIY Wooden Birdhouse Kit')->value('id');
 
         DB::table('cart')->insert([
             [
                 'id' => uniqid(),
                 'quantity' => 2,
                 'userId' => $userId,
-                'productId' => $productSmartphoneId,
+                'productId' => $glueId,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -34,7 +35,7 @@ class CartSeeder extends Seeder
                 'id' => uniqid(),
                 'quantity' => 6,
                 'userId' => $userId,
-                'productId' => $productTShirtId,
+                'productId' => $paintId,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
@@ -42,7 +43,7 @@ class CartSeeder extends Seeder
                 'id' => uniqid(),
                 'quantity' => 3,
                 'userId' => $user2Id,
-                'productId' => $productTShirtId,
+                'productId' => $diyBirdhouseId,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

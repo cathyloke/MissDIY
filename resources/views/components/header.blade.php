@@ -4,7 +4,17 @@
     </div>
     <div class="topnav-right">
         <a href="/">Home</a>
-        <a href="">Products</a>
+        <div class="dropdown">
+            <a href="{{ route('products.index') }}" class="dropbtn">
+                Products <i class="fa fa-caret-down"></i>
+            </a>
+            <div class="dropdown-content">
+                <a href="{{ route('products.index') }}">All Categories</a>
+                @foreach ($categories as $category)
+                    <a href="{{ route('products.index', ['categoryId' => $category->id]) }}">{{ $category->name }} </a>
+                @endforeach
+            </div>
+        </div>
         <a href="">Orders</a>
         <a href="cart"><i class="fa-solid fa-cart-shopping"></i></a>
         <a href=""><i class="fa-solid fa-user"></i></a>

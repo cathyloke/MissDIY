@@ -10,14 +10,14 @@
     margin: 20px;
 }
 
-.single-product .remove-icon{
+.single-product .checkbox{
     grid-column: 1;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.single-product .remove-icon button{
+.single-product .checkbox .remove-icon{
     background-color: transparent;
     border: none;
     padding: 5px 10px;

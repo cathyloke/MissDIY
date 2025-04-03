@@ -19,9 +19,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/cart', function(){
-    return view('cart');
-});
+// Route::get('/cart', function(){
+//     return view('cart');
+// });
 
 // Product
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -29,10 +29,15 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 // Product Details
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
+//RL Note to SQ: I put the code from ur middleware outside first ahh, if not my cart can't be shown
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add/{productId}', [CartController::class, 'addToCart'])->name('cart.add');
+Route::delete('/cart/remove/{productId}', [CartController::class, 'removeProduct'])->name('cart.remove');
+Route::post('cart/update/{productId}', [CartController::class, 'updateCartQuantity']);
 
 // This does not work derrr, but if delete then cannot show the product details
-Route::middleware(['customer'])->group(function () {
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
-    Route::delete('/cart/remove/{product}', [CartController::class, 'removeProduct'])->name('cart.remove');
-});
+// Route::middleware(['customer'])->group(function () {
+//     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+//     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+//     Route::delete('/cart/remove/{product}', [CartController::class, 'removeProduct'])->name('cart.remove');
+// });

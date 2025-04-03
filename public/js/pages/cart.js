@@ -1,3 +1,5 @@
+// const { error } = require("laravel-mix/src/Log");
+
 document.addEventListener("DOMContentLoaded", function(){
     const checkboxes = document.querySelectorAll("input[name='selected_product']");
     
@@ -6,34 +8,86 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 });
 
-function increment(button){
-    let input = button.previousElementSibling;
-    let quantity = parseInt(input.value);
-    input.value = quantity + 1;
-    updateTotalPrice(input);
+function removeProduct(productId){
+    //remove product in cart database 
+    fetch(`/cart/remove/${productId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        },
+    })
+    .then(response => response.json())
+    .then(data=>{
+        if(data.success){
+            //remove the product from cart page
+            const cartItem = document.querySelector(`.single-product[data-id="${productId}"]`);
+            if(cartItem){
+                cartItem.remove();
+                //update subtotal
+                updateSubtotal();
+            }
+            console.log(data.success);
+        }else{
+            console.log(data.error);
+        }
+    })
+    .catch(error=>{
+        console.error("Error:", error);
+    });
 }
 
-function decrement(button){
-    let input = button.nextElementSibling;
-    let quantity = parseInt(input.value);
-    if(quantity > 1){
-        input.value = quantity - 1;
-        updateTotalPrice(input);
+
+function updateQuantity(productId, change){
+    let cartItem = document.querySelector(`.single-product[data-id="${productId}"]`);
+    if(cartItem){
+        //update quantity input
+        let quantityInput = cartItem.querySelector(".product-quantity-input");
+        let currentQuantity = parseInt(quantityInput.value);
+        let newQuantity = currentQuantity + change;
+        if(newQuantity < 1){
+            return;
+        }
+        quantityInput.value = newQuantity;
+
+        //update total price of the product
+        let price = parseFloat(cartItem.querySelector(".price").innerText);
+        let total = cartItem.querySelector(".total");
+        total.innerText = (price*newQuantity).toFixed(2);
+        //update subtotal if the product is selected
+        let checkbox = cartItem.querySelector("input[name='selected_product']");
+        if(checkbox.checked){
+            updateSubtotal();
+        }
+        
+        // update product quantity in database
+        fetch(`/cart/update/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({ quantity: quantityInput.value })
+        })
+        .then(response=>{
+            if(!response.ok){
+                throw new Error("Response was not ok");
+            }
+            return response.json();
+        })
+        .then(data=>{
+            if(data.success){
+                console.log(data.success);
+            }else{
+                console.log(data.error);
+            }
+        })
+        .catch(error=>{
+            console.error("Error:", error);
+        })
     }
 }
 
-function updateTotalPrice(input){
-    let product = input.closest(".single-product");
-    let price = parseFloat(product.querySelector(".price").innerText);
-    let quantity = parseInt(input.value);
-    let total = product.querySelector(".total");
-    total.innerText = (price*quantity).toFixed(2);
-
-    let checkbox = product.querySelector("input[name='selected_product']");
-    if(checkbox.checked){
-        updateSubtotal();
-    }
-}
 
 function updateSubtotal(){
     const checkboxes = document.querySelectorAll("input[name='selected_product']");
@@ -50,12 +104,6 @@ function updateSubtotal(){
     subtotalElement.innerText = subtotal.toFixed(2);
 }
 
-function removeProduct(button){
-    let product = button.closest(".single-product");
-    product.remove();
-    updateSubtotal();
-}
-
 function applyVoucher(){
     let voucherInput = document.getElementById("voucher-code").value;
     let deliveryFee = 8;
@@ -67,3 +115,4 @@ function applyVoucher(){
     }
 
 }
+

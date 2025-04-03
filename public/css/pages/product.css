@@ -170,12 +170,8 @@
     border-radius: 4px;
 }
 
-.add-to-cart-form {
-    margin-top: 20px;
-    margin-left: 10px;
-}
-
 .add-to-cart-btn {
+    margin-top: 20px;
     background: #A7A6BA;
     color: #353839;
     padding: 0.8rem 2rem;

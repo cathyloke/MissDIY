@@ -18,32 +18,41 @@ class CartSeeder extends Seeder
         $userId = DB::table('user')->where('name', 'Cathy')->value('id');
         $user2Id = DB::table('user')->where('name', 'Shirley')->value('id');
         
-        $glueId = DB::table('product')->where('name', 'Multi-Purpose Craft Glue')->value('id');
-        $paintId = DB::table('product')->where('name', 'Acrylic Paint Set')->value('id');
-        $diyBirdhouseId = DB::table('product')->where('name', 'DIY Wooden Birdhouse Kit')->value('id');
+        $glue = DB::table('product')->where('name', 'Multi-Purpose Craft Glue');
+        $paint = DB::table('product')->where('name', 'Acrylic Paint Set');
+        $diyBirdhouse = DB::table('product')->where('name', 'DIY Wooden Birdhouse Kit');
 
         DB::table('cart')->insert([
             [
                 'id' => uniqid(),
-                'quantity' => 2,
                 'userId' => $userId,
-                'productId' => $glueId,
+                'productId' => $glue->value('id'),
+                'productImg' => $glue->value('image'),
+                'productName' => $glue->value('name'),
+                'productPrice' => $glue->value('price'),
+                'productQty' => 2,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
                 'id' => uniqid(),
-                'quantity' => 6,
                 'userId' => $userId,
-                'productId' => $paintId,
+                'productId' => $paint->value('id'),
+                'productImg' => $paint->value('image'),
+                'productName' => $paint->value('name'),
+                'productPrice' => $paint->value('price'),
+                'productQty' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
                 'id' => uniqid(),
-                'quantity' => 3,
-                'userId' => $user2Id,
-                'productId' => $diyBirdhouseId,
+                'userId' => $userId,
+                'productId' => $diyBirdhouse->value('id'),
+                'productImg' => $diyBirdhouse->value('image'),
+                'productName' => $diyBirdhouse->value('name'),
+                'productPrice' => $diyBirdhouse->value('price'),
+                'productQty' => 2,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

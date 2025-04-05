@@ -3,7 +3,7 @@
 echo "Running database migration files..."
 
 # Running database migration files
-php artisan migrate --path=database/migrations/2025_03_08_153146_create_user_table.php
+php artisan migrate --path=database/migrations/2014_10_12_000000_create_users_table.php
 
 php artisan migrate --path=database/migrations/2025_03_08_153153_create_category_table.php
 

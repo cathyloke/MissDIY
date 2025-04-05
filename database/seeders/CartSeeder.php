@@ -15,9 +15,9 @@ class CartSeeder extends Seeder
      */
     public function run()
     {
-        $userId = DB::table('user')->where('name', 'Cathy')->value('id');
-        $user2Id = DB::table('user')->where('name', 'Shirley')->value('id');
-        
+        $userId = DB::table('users')->where('name', 'Cathy')->value('id');
+        $user2Id = DB::table('users')->where('name', 'Shirley')->value('id');
+
         $glue = DB::table('product')->where('name', 'Multi-Purpose Craft Glue');
         $paint = DB::table('product')->where('name', 'Acrylic Paint Set');
         $diyBirdhouse = DB::table('product')->where('name', 'DIY Wooden Birdhouse Kit');

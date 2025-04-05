@@ -10,6 +10,6 @@ class CategoryController extends Controller
     function getCategories(): View
     {
         $categories = Category::withCount('products')->get();
-        return view('components.header', compact('categories'));
+        return view('layouts.app', compact('categories'));
     }
 }

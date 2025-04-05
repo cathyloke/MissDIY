@@ -15,8 +15,8 @@ class SalesSeeder extends Seeder
      */
     public function run()
     {
-        $userId = DB::table('user')->where('name', 'Cathy')->value('id');
-        $user2Id = DB::table('user')->where('name', 'Shirley')->value('id');
+        $userId = DB::table('users')->where('name', 'Cathy')->value('id');
+        $user2Id = DB::table('users')->where('name', 'Shirley')->value('id');
         
         DB::table('sales')->insert([
             [

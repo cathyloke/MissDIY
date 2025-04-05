@@ -22,7 +22,7 @@ class CreateSalesTable extends Migration
             $table->string('userId', 21);
             $table->timestamps(); 
 
-            $table->foreign('userId')->references('id')->on('user')->onDelete('no action');
+            $table->foreign('userId')->references('id')->on('users')->onDelete('no action');
         });
     }
 

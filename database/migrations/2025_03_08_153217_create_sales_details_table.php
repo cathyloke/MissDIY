@@ -23,7 +23,7 @@ class CreateSalesDetailsTable extends Migration
 
             $table->foreign('productId')->references('id')->on('product')->onDelete('no action');
             $table->foreign('salesId')->references('id')->on('sales')->onDelete('no action');
-            $table->foreign('userId')->references('id')->on('user')->onDelete('no action');
+            $table->foreign('userId')->references('id')->on('users')->onDelete('no action');
         });
     }
 

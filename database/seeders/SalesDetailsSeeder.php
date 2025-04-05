@@ -18,8 +18,8 @@ class SalesDetailsSeeder extends Seeder
         $glueId = DB::table('product')->where('name', 'Multi-Purpose Craft Glue')->value('id');
         $paintId = DB::table('product')->where('name', 'Acrylic Paint Set')->value('id');
         $diyBirdhouseId = DB::table('product')->where('name', 'DIY Wooden Birdhouse Kit')->value('id');
-        $userId = DB::table('user')->where('name', 'Cathy')->value('id');
-        $user2Id = DB::table('user')->where('name', 'Shirley')->value('id');
+        $userId = DB::table('users')->where('name', 'Cathy')->value('id');
+        $user2Id = DB::table('users')->where('name', 'Shirley')->value('id');
         
         DB::table('sales_details')->insert([
             [

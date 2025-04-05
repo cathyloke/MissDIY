@@ -23,7 +23,7 @@ class CreateCartTable extends Migration
             $table->unsignedInteger('productQty')->default(0);
             $table->timestamps(); 
 
-            $table->foreign('userId')->references('id')->on('user')->onDelete('no action');
+            $table->foreign('userId')->references('id')->on('users')->onDelete('no action');
             $table->foreign('productId')->references('id')->on('product')->onDelete('no action');
         });
     }

@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +19,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
 
 // Route::get('/cart', function(){
 //     return view('cart');
@@ -41,3 +47,14 @@ Route::post('cart/update/{productId}', [CartController::class, 'updateCartQuanti
 //     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
 //     Route::delete('/cart/remove/{product}', [CartController::class, 'removeProduct'])->name('cart.remove');
 // });
+Auth::routes();
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', function () {
+        return view('profile.show');
+    })->name('profile.show');
+
+    Route::get('/orders', function () {
+        return view('profile.order');
+    })->name('profile.order');
+});

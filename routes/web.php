@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,3 +64,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::put('/sale/{sale}/complete', [SalesController::class, 'markAsCompleted'])->name('sale.complete');
+
+// Checkout to payment
+// Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
+Route::get('/payment', [PaymentController::class, 'index'])->middleware('auth')->name('payment.index');
+Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');

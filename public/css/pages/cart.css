@@ -160,11 +160,6 @@
 }
 
 .checkout {
-    margin-right: 20px;
-    text-align: center;
-}
-
-.checkout button {
     background: #001d6e;
     color: white;
     font-size: 18px;
@@ -172,6 +167,8 @@
     border: none;
     cursor: pointer;
     border-radius: 5px;
+    margin-right: 20px;
+    text-align: center;
 }
 
 .checkout button:hover {

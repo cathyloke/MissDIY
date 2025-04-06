@@ -1,10 +1,13 @@
 // const { error } = require("laravel-mix/src/Log");
 
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", function() {
     const checkboxes = document.querySelectorAll("input[name='selected_product']");
     
-    checkboxes.forEach(checkbox=>{
-        checkbox.addEventListener("change", updateSubtotal);
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function() {
+            updateSubtotal();
+            return true; // allow form submission
+        });
     });
 });
 

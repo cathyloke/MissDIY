@@ -15,6 +15,11 @@
 <body>
     <!--Navbar-->
     <x-header />
+
+    @if (session('error'))
+    <p class="error-message">{{ session('error') }}</p>
+    @endif
+    
     <!--Product-->
     <section class="cart">
         @foreach ($cartItems as $cartItem)
@@ -36,8 +41,8 @@
                     <div class="product-quantity">
                         <button type="button" name="decrement"
                             onclick="updateQuantity('{{ $cartItem->id }}', -1)">-</button>
-                        <input type="text" name="product-quantity" id="product-quantity"
-                            class="product-quantity-input" value={{ $cartItem->productQty }} min="1">
+                        <input type="text" name="product-quantity" id="product-quantity-{{ $cartItem->id }}"
+                            class="product-quantity-input" value="{{ $cartItem->product_qty }}" min="1">
                         <button type="button" name="increment"
                             onclick="updateQuantity('{{ $cartItem->id }}', 1)">+</button>
                     </div>
@@ -64,13 +69,13 @@
         <div class="subtotal-checkout">
             <!--Subtotal-->
             <div class="subtotal">
-                <h3>Subtotal: RM <span class="subtotal-amount">0.00</span></h3>
+                <h3>Subtotal: RM <span class="subtotal-amount">{{ session('subtotal') ?? 0.00 }}</span></h3>
             </div>
 
             <!--Checkout button-->
-            <div class="checkout">
-                <button type="button">Checkout</button>
-            </div>
+            <form action="{{ route('payment.index') }}" method="GET">
+                <button type="submit" class="checkout">Checkout</button>
+            </form>
         </div>
     </section>
 

@@ -17,6 +17,9 @@ class CartController extends Controller
         // $userId = DB::table('users')->where('name', 'Cathy')->value('id');
 
         $cartItems = Cart::where('userId', $userId)->get();
+
+        session(['subtotal' => number_format(0.00, 2)]); // Initialize subtotal to 0.00
+
         return view("cart", compact('cartItems'));
     }
 

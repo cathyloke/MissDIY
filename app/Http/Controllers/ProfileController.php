@@ -29,4 +29,11 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.show')->with('success', 'Profile updated successfully!');
     }
+
+    public function orders()
+    {
+        $user = \App\Models\User::find(Auth::id());
+        $orders = $user->sales()->latest()->get();
+        return view('profile.orders', compact('orders'));
+    }
 }

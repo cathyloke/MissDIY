@@ -78,7 +78,7 @@
                                     <a class="nav-link" href="{{ route('profile.show') }}">
                                         {{ __('My Profile') }}
                                     </a>
-                                    <a class="nav-link" href="{{ route('profile.order') }}">
+                                    <a class="nav-link" href="{{ route('profile.orders') }}">
                                         {{ __('My Orders') }}
                                     </a>
                                     <div class="dropdown-divider"></div>

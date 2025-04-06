@@ -15,6 +15,11 @@
 <body>
     <!--Navbar-->
     <x-header />
+
+    @if (session('error'))
+    <p class="error-message">{{ session('error') }}</p>
+    @endif
+    
     <!--Product-->
     <section class="cart">
         @foreach ($cartItems as $cartItem)

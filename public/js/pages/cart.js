@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("change", function() {
             updateSubtotal();
-            return true; // allow form submission
+            // return true; // allow form submission
         });
     });
 });

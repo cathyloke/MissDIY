@@ -19,8 +19,11 @@ class PaymentController extends Controller
         $userId = Auth::id();
         $cartItems = Cart::where('userId', $userId)->get();
 
+        // dd($cartItems); // Check the cart items
+
         if ($cartItems->isEmpty()) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty. Please add items to your cart before proceeding to payment.');
+            session()->flash('error', 'Your cart is empty. Please add items to your cart before proceeding to payment.');
+            return redirect()->route('cart.index');
         } 
 
         $subtotal = $cartItems->sum(function ($item) {
@@ -29,9 +32,9 @@ class PaymentController extends Controller
 
         session(['subtotal' => $subtotal]); // Update subtotal in the session
 
-        // return view('payment', compact('cartItems', 'subtotal'));
+        return view('payment', compact('cartItems', 'subtotal'));
         // return view('payment', compact('cartItems'));
-        return redirect()->route('payment.index');
+        // return redirect()->route('payment.index');
     }
 
     // Process payment

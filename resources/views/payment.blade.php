@@ -3,7 +3,7 @@
 <head>
    <meta charset="UTF-8">
    <title>Payment</title>
-   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+   <link rel="stylesheet" href="{{ asset('css/app2.css') }}">
 </head>
 <body>
    <x-header />

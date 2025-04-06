@@ -19,6 +19,9 @@
                         <th>Net Total</th>
                         <th>Status</th>
                         <th>Details</th>
+                        @if(Auth::user()->type == 'customer')  
+                            <th>Actions</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -43,18 +46,31 @@
                                     View Details
                                 </button>
                             </td>
+
+                            @if(Auth::user()->type == 'customer' && $order->status == 'delivering')
+                                <td>
+                                    <form action="{{ route('sale.complete', $order->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-light btn-sm">Received</button>
+                                    </form>
+                                </td>
+                            @else
+                                <td>N/A</td>
+                            @endif
                         </tr>
                         <tr class="collapse" id="details-{{ $order->id }}">
                             <td colspan="6">
                                 <div class="card">
                                     <div class="card-body">
+                                        <h5 class="mb-3">Product Details</h5>
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>Image</th>
                                                     <th>Product Name</th>
-                                                    <th>Price Per Quantity</th>
                                                     <th>Quantity Purchased</th>
+                                                    <th>Price Per Quantity</th>
                                                     <th>Total Price</th>
                                                 </tr>
                                             </thead>
@@ -69,8 +85,8 @@
                                                             </div>
                                                         </td>
                                                         <td>{{ $detail->product->name }}</td>
-                                                        <td>${{ number_format($detail->product->price, 2) }}</td>
                                                         <td>{{ $detail->quantity }}</td>
+                                                        <td>${{ number_format($detail->product->price, 2) }}</td>
                                                         <td>${{ number_format($detail->quantity * $detail->product->price, 2) }}</td>
                                                     </tr>
                                                 @endforeach

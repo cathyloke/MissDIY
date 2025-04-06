@@ -12,7 +12,7 @@
       <h2>Payment</h2>
 
       <div class="order-summary">
-         @foreach ($cartItems as $item)
+         @foreach ($selectedItems as $item)
                <div>
                   {{ $item->productName }} × {{ $item->productQty }} = RM {{ number_format($item->productQty * $item->productPrice, 2) }}
                </div>

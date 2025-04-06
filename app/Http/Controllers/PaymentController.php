@@ -14,25 +14,41 @@ class PaymentController extends Controller
     }
 
     // Show payment page
-    public function index()
+    public function index(Request $request)
     {
         $userId = Auth::id();
         $cartItems = Cart::where('userId', $userId)->get();
 
         // dd($cartItems); // Check the cart items
 
-        if ($cartItems->isEmpty()) {
-            session()->flash('error', 'Your cart is empty. Please add items to your cart before proceeding to payment.');
-            return redirect()->route('cart.index');
-        } 
+        $selectedItems = array();
+        foreach ($cartItems as $item) {
+            if ($request->has('selected_product') && in_array($item->id, $request->input('selected_product'))) {
+                $selectedItems[] = $item;
+            }
+        }
 
-        $subtotal = $cartItems->sum(function ($item) {
-            return $item->productPrice * $item->productQty;
-        });
+        if (empty($selectedItems)) {
+            session()->flash('error', 'Please select at least one item to checkout.');
+            return redirect()->route('cart.index');
+        }
+
+        // if ($cartItems->isEmpty()) {
+        //     session()->flash('error', 'Your cart is empty. Please add items to your cart before proceeding to payment.');
+        //     return redirect()->route('cart.index');
+        // } 
+
+        // $subtotal = $cartItems->sum(function ($item) {
+        //     return $item->productPrice * $item->productQty;
+        // });
+        $subtotal = 0;
+        foreach ($selectedItems as $item) {
+            $subtotal += $item->productPrice * $item->productQty;
+        }
 
         session(['subtotal' => $subtotal]); // Update subtotal in the session
 
-        return view('payment', compact('cartItems', 'subtotal'));
+        return view('payment', compact('selectedItems', 'subtotal'));
         // return view('payment', compact('cartItems'));
         // return redirect()->route('payment.index');
     }

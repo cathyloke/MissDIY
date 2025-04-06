@@ -22,10 +22,16 @@
     
     <!--Product-->
     <section class="cart">
+        <!-- Select all checkbox -->
+        <div class="checkbox">
+            <input type="checkbox" id="select-all" onchange="selectAll(this)">
+            <label for="select-all">Select all</label>
+        </div>
+        
         @foreach ($cartItems as $cartItem)
             <div class="single-product" data-id="{{ $cartItem->id }}">
                 <div class="checkbox">
-                    <input type="checkbox" name="selected_product" value="$cartItem->id">
+                    <input type="checkbox" class="selected-product" name="selected_product[]" value="{{ $cartItem->id }}">
                     <button type="submit" class="remove-icon" onclick="removeProduct('{{ $cartItem->id }}')">
                         <i class="fa-solid fa-trash"></i>
                     </button>
@@ -72,8 +78,12 @@
                 <h3>Subtotal: RM <span class="subtotal-amount">{{ session('subtotal') ?? 0.00 }}</span></h3>
             </div>
 
-            <!--Checkout button-->
+            <!-- Checkout button -->
             <form action="{{ route('payment.index') }}" method="GET">
+                @csrf
+                @foreach ($cartItems as $cartItem)
+                    <input type="hidden" name="selected_product[]" value="{{ $cartItem->id }}" {{ old('selected_product') == $cartItem->id ? 'checked' : '' }}>
+                @endforeach
                 <button type="submit" class="checkout">Checkout</button>
             </form>
         </div>

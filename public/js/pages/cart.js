@@ -93,18 +93,20 @@ function updateQuantity(productId, change){
 
 
 function updateSubtotal(){
-    const checkboxes = document.querySelectorAll("input[name='selected_product']");
+    // const checkboxes = document.querySelectorAll("input[name='selected_product']");
+    const checkboxes = document.querySelectorAll('.selected-product:checked');
     const subtotalElement = document.querySelector(".subtotal-amount");
     let subtotal = 0;
 
-    checkboxes.forEach(checkbox=>{
-        if(checkbox.checked){
+    checkboxes.forEach(checkbox => {
+        if(checkbox.checked) {
             let product = checkbox.closest(".single-product");
             let total = parseFloat(product.querySelector(".total").innerText);
-            subtotal+=total;
+            subtotal += total;
         }
     });
-    subtotalElement.innerText = subtotal.toFixed(2);
+    // subtotalElement.innerText = subtotal.toFixed(2);
+    document.querySelector('.subtotal-amount').textContent = subtotal.toFixed(2);
 }
 
 function applyVoucher(){
@@ -119,3 +121,18 @@ function applyVoucher(){
 
 }
 
+// Select all checkboxes
+function selectAll(source) {
+    const checkboxes = document.querySelectorAll('.selected-product');
+    for (var i = 0, n = checkboxes.length; i < n; i++) {
+        checkboxes[i].checked = source.checked;
+    }
+    updateSubtotal(); // Call the updateSubtotal function
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('.selected-product');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateSubtotal);
+    });
+});

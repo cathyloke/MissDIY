@@ -54,6 +54,10 @@ Route::middleware(['auth'])->group(function () {
         return view('profile.show');
     })->name('profile.show');
 
+    Route::get('/profile/edit', function () {
+        return view('profile.edit');
+    })->name('profile.edit');
+
     Route::get('/orders', function () {
         return view('profile.order');
     })->name('profile.order');

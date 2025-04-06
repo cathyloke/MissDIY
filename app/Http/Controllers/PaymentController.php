@@ -30,7 +30,8 @@ class PaymentController extends Controller
         session(['subtotal' => $subtotal]); // Update subtotal in the session
 
         // return view('payment', compact('cartItems', 'subtotal'));
-        return view('payment', compact('cartItems'));
+        // return view('payment', compact('cartItems'));
+        return redirect()->route('payment.index');
     }
 
     // Process payment

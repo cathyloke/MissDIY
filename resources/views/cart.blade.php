@@ -69,7 +69,6 @@
 
             <!--Checkout button-->
             <form action="{{ route('payment.index') }}" method="GET">
-                @csrf
                 <button type="submit" class="checkout">Checkout</button>
             </form>
         </div>

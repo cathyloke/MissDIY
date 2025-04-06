@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -12,7 +13,8 @@ class CartController extends Controller
 {
     function index()
     {
-        $userId = DB::table('users')->where('name', 'Cathy')->value('id');
+        $userId = Auth::id();
+        // $userId = DB::table('users')->where('name', 'Cathy')->value('id');
 
         $cartItems = Cart::where('userId', $userId)->get();
         return view("cart", compact('cartItems'));
@@ -22,8 +24,9 @@ class CartController extends Controller
     {
         $product = Product::findOrFail($productId);
         $quantity = $request->input('quantity');
-        //temporary code to get userId**
-        $userId = DB::table('users')->where('name', 'Cathy')->value('id');
+        //temporary code to get userId** - cathy help change haha
+        // $userId = DB::table('users')->where('name', 'Cathy')->value('id');
+        $userId = Auth::id();
 
         //Check if the product already exists in the cart
         $cartItem = Cart::where('userId', $userId)->where('productId', $productId)->first();

@@ -5,22 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products List</title>
     <link rel="stylesheet" href="{{ asset('css/pages/product.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/app2.css') }}"/>
     <script src="https://kit.fontawesome.com/25b5310acf.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <x-header/>
     <!-- Catogory -->
     <div class="category-breadcrumb">
-        <span class="font-semibold">Category</span>
+        <!-- Plain text for users, and href for admin to edit -->
+        <a href="{{ route('categories.index') }}">Category</a>
+        <!-- <span class="font-semibold">Category</span> -->
+         
         <span class="mx-2">>></span>
         @if(isset($category) && $category)
             <span class="font-semibold">{{ $category->name }}</span>
         @else
             <span class="font-semibold">All Categories</span>
         @endif
+
+        <button onclick="toggleFilter()"><i class="fa-solid fa-filter"></i></button>
     </div>
 
+    <!-- Filter Panel -->
+    <div id="filterPanel" class="filter-panel hidden">
+        <div class="filter-panel-header">
+            <div class="back-button-container">
+                <button class="back-button" onclick="toggleFilter()" aria-label="Close filter panel">←</button>
+            </div>
+            <h3 class="filter-title">Filter Options</h3>
+        </div>
+        
+        <div class="filter-options">
+            <h5>Category Filtering</h5>
+            <div class="category-buttons">
+                <button class="category-button {{ !$selectedCategory ? 'active' : '' }}" 
+                        data-category="">All Categories</button>
+                @foreach($categories as $category)
+                    <button class="category-button {{ $selectedCategory && $selectedCategory->id == $category->id ? 'active' : '' }}" 
+                            data-category="{{ $category->id }}">
+                        {{ $category->name }}
+                    </button>
+                @endforeach
+            </div>
+
+            <h5>Price Sorting</h5>
+            <div class="price-sort-options">
+                <button class="price-sort-button {{ $sortOrder == 'asc' ? 'active' : '' }}" 
+                        data-sort="asc">Low to High</button>
+                <button class="price-sort-button {{ $sortOrder == 'desc' ? 'active' : '' }}" 
+                        data-sort="desc">High to Low</button>
+            </div>
+        </div>
+
+        <div class="apply-button-container">
+            <button class="apply-button" onclick="applyFilters()">Apply Filters</button>
+        </div>
+    </div>
 
     <!-- Product -->
     <div class="product-container">
@@ -40,7 +80,6 @@
             <div id="modalContent"></div>
         </div>
     </div>
-
 
     <script>
         // Handle product card clicks
@@ -82,6 +121,56 @@
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
                 closeModal();
+            }
+        });
+
+        // Filter Panel
+        function toggleFilter() {
+            const panel = document.getElementById('filterPanel');
+            panel.classList.toggle('active');
+            
+            // Toggle overlay if it exists
+            const overlay = document.querySelector('.filter-overlay');
+            if (overlay) {
+                overlay.style.display = panel.classList.contains('active') ? 'block' : 'none';
+            }
+        }
+
+        function applyFilters() {
+            // Get selected category from active button
+            const categoryButton = document.querySelector('.category-button.active');
+            const categoryId = categoryButton ? categoryButton.dataset.category : '';
+            
+            // Get selected sort from active button
+            const sortButton = document.querySelector('.price-sort-button.active');
+            const sort = sortButton ? sortButton.dataset.sort : 'asc';
+            
+            // Redirect with filters
+            window.location.href = `{{ route('products.index') }}?categoryId=${categoryId}&sort=${sort}`;
+        }
+
+        // Initialize filter buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            // Category button click handlers
+            document.querySelectorAll('.category-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.category-button').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Price sort button click handlers
+            document.querySelectorAll('.price-sort-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.price-sort-button').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Close panel when clicking overlay
+            const overlay = document.querySelector('.filter-overlay');
+            if (overlay) {
+                overlay.addEventListener('click', toggleFilter);
             }
         });
     </script>

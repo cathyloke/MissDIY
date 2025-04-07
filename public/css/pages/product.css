@@ -8,9 +8,157 @@
     display: flex;
     align-items: center;
 }
+.category-breadcrumb a {
+    color: #731f7a;
+    font-weight: bold;
+}
 
 .category-breadcrumb span {
     margin: 0 0.5rem;
+}
+
+.category-breadcrumb button {
+    border: none; 
+    background: none; 
+    padding: 30px; 
+    outline: none;
+    color: #3E424B; 
+    font-size: 20px; 
+    position: absolute;
+    right: 0;
+}
+
+/* Fliter Sliding Window */
+/* Filter Sliding Window */
+.filter-panel {
+    position: fixed;
+    right: -400px; 
+    top: 0;
+    width: 300px; 
+    height: 100%;
+    background-color: #C4C3D0;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+    padding: 20px;
+    transition: right 0.3s ease-in-out;
+    font-size: 17px;
+    font-family: 'Cormorant Garamond', serif;
+    color: #3E424B;
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-panel.active {
+    right: 0;
+}
+
+/* Updated CSS for the filter panel header */
+.filter-panel-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.back-button-container {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.filter-title {
+    text-align: center;
+    margin: 10px 0 20px 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px 10px;
+    color: #3E424B;
+    margin-bottom: 10px;
+}
+
+.filter-options {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 60px; 
+}
+
+.category-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.category-button {
+    padding: 8px 15px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.category-button.active {
+    background: #3E424B;
+    color: white;
+    border-color: #3E424B;
+}
+
+.price-sort-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.price-sort-button {
+    padding: 8px 15px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.price-sort-button.active {
+    background: #3E424B;
+    color: white;
+    border-color: #3E424B;
+}
+
+.apply-button-container {
+    position: absolute;
+    bottom: 55px;
+    left: 20px;
+    right: 20px;
+}
+
+.apply-button {
+    width: 100%;
+    padding: 12px;
+    background: #3E424B;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s ease;
+}
+
+.filter-panel .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    color: #3E424B;
 }
 
 /*Product*/
@@ -38,7 +186,6 @@
 .product-container div:hover {
     transform: scale(1.05);
 }
-
 
 .product-name {
     margin: 8px 0;
@@ -120,7 +267,7 @@
     align-items: center;
 }
 
-.detail-image {
+.p-detail-image {
     width: 350px;
     height: 330px;
     object-fit: contain;
@@ -212,17 +359,4 @@
     .modal-grid {
         grid-template-columns: 1fr;
     }
-}
-
-/* General */
-h3 {
-    color: #353839;
-    font-size: 30px;
-    font-family: 'Cormorant Garamond', serif;
-}
-
-h4 {
-    color: #353839;
-    font-size: 25px;
-    font-family: 'Cormorant Garamond', serif;
 }

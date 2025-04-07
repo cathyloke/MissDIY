@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,12 +45,6 @@ Route::post('/cart/add/{productId}', [CartController::class, 'addToCart'])->name
 Route::delete('/cart/remove/{productId}', [CartController::class, 'removeProduct'])->name('cart.remove');
 Route::post('cart/update/{productId}', [CartController::class, 'updateCartQuantity']);
 
-// This does not work derrr, but if delete then cannot show the product details
-// Route::middleware(['customer'])->group(function () {
-//     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-//     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
-//     Route::delete('/cart/remove/{product}', [CartController::class, 'removeProduct'])->name('cart.remove');
-// });
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
@@ -69,3 +64,14 @@ Route::put('/sale/{sale}/complete', [SalesController::class, 'markAsCompleted'])
 Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
 // Route::get('/payment', [PaymentController::class, 'index'])->middleware('auth')->name('payment.index');
 Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');
+
+
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+Route::delete('/categories/{category}/deactivate', [CategoryController::class, 'deactivate'])->name('categories.deactivate');
+Route::patch('/categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+
+

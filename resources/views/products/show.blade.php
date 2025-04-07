@@ -11,7 +11,7 @@
             <div class="detail-image-container">
                 <img src="{{ asset('images/' . $product->image) }}" 
                     alt="{{ $product->name }}" 
-                    class="detail-image">
+                    class="p-detail-image">
             </div>
 
             <!-- Product Info Column -->

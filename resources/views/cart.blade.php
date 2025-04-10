@@ -17,7 +17,7 @@
     <x-header />
 
     @if (session('error'))
-    <p class="error-message">{{ session('error') }}</p>
+        <p class="error-message">{{ session('error') }}</p>
     @endif
     
     <!--Product-->
@@ -31,7 +31,7 @@
         @foreach ($cartItems as $cartItem)
             <div class="single-product" data-id="{{ $cartItem->id }}">
                 <div class="checkbox">
-                    <input type="checkbox" class="selected-product" name="selected_product[]" value="{{ $cartItem->id }}">
+                    <input type="checkbox" class="selected-product" value="{{ $cartItem->id }}">
                     <button type="submit" class="remove-icon" onclick="removeProduct('{{ $cartItem->id }}')">
                         <i class="fa-solid fa-trash"></i>
                     </button>
@@ -62,7 +62,7 @@
     </section>
 
     <section class="fixed-bottom-bar">
-        <!--Apply voucher-->
+        <!-- Apply voucher
         <div class="voucher">
             <div class="apply-voucher">
                 <i class="fa-solid fa-ticket"></i>
@@ -70,7 +70,7 @@
                 <button onclick="applyVoucher()">Apply</button>
             </div>
             <p id="voucher-message"></p>
-        </div>
+        </div> -->
 
         <div class="subtotal-checkout">
             <!--Subtotal-->
@@ -78,12 +78,9 @@
                 <h3>Subtotal: RM <span class="subtotal-amount">{{ session('subtotal') ?? 0.00 }}</span></h3>
             </div>
 
-            <!-- Checkout button -->
-            <form action="{{ route('payment.index') }}" method="GET">
+            <!-- Checkout Form -->
+            <form id="checkout-form" action="{{ route('payment.index') }}" method="GET">
                 @csrf
-                @foreach ($cartItems as $cartItem)
-                    <input type="hidden" name="selected_product[]" value="{{ $cartItem->id }}" {{ old('selected_product') == $cartItem->id ? 'checked' : '' }}>
-                @endforeach
                 <button type="submit" class="checkout">Checkout</button>
             </form>
         </div>

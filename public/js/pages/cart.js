@@ -136,3 +136,45 @@ document.addEventListener('DOMContentLoaded', function () {
         checkbox.addEventListener('change', updateSubtotal);
     });
 });
+
+// Prevent form submission if no items are selected
+document.addEventListener('DOMContentLoaded', function () {
+    const checkoutForm = document.querySelector('.subtotal-checkout form');
+    checkoutForm.addEventListener('submit', function (e) {
+        const checkedItems = document.querySelectorAll('.selected-product:checked');
+        if (checkedItems.length === 0) {
+            e.preventDefault();
+            alert('Please select at least one item to checkout.');
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const checkoutForm = document.getElementById('checkout-form');
+    
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', function (e) {
+            // Remove any previously appended hidden inputs
+            document.querySelectorAll('.dynamic-product-input').forEach(el => el.remove());
+
+            const checkedItems = document.querySelectorAll('.selected-product:checked');
+
+            if (checkedItems.length === 0) {
+                e.preventDefault();
+                alert('Please select at least one item to checkout.');
+                return;
+            }
+
+            // Add hidden inputs for each selected checkbox
+            checkedItems.forEach(checkbox => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'selected_product[]';
+                input.value = checkbox.value;
+                input.classList.add('dynamic-product-input');
+                checkoutForm.appendChild(input);
+            });
+        });
+    }
+});
+

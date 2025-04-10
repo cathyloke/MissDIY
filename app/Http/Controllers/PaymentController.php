@@ -17,21 +17,36 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         $userId = Auth::id();
-        $cartItems = Cart::where('userId', $userId)->get();
+        // $cartItems = Cart::where('userId', $userId)->get();
+        $selectedProductIds = $request->input('selected_product', []); // Get selected product IDs from the request
 
         // dd($cartItems); // Check the cart items
 
-        $selectedItems = array();
-        foreach ($cartItems as $item) {
-            if ($request->has('selected_product') && in_array($item->id, $request->input('selected_product'))) {
-                $selectedItems[] = $item;
-            }
-        }
-
-        if (empty($selectedItems)) {
+        if (empty($selectedProductIds)) {
             session()->flash('error', 'Please select at least one item to checkout.');
             return redirect()->route('cart.index');
         }
+
+        // fetch only selected cart items for current user
+        $selectedItems = Cart::where('userId', $userId)
+                            ->whereIn('id', $selectedProductIds) // Filter by selected product IDs
+                            ->get();
+        
+        $subtotal = $selectedItems->sum(function($item) {
+            return $item->productPrice * $item->productQty;
+        });
+
+        // $selectedItems = array();
+        // foreach ($cartItems as $item) {
+        //     if ($request->has('selected_product') && in_array($item->id, $request->input('selected_product'))) {
+        //         $selectedItems[] = $item;
+        //     }
+        // }
+
+        // if (empty($selectedItems)) {
+        //     session()->flash('error', 'Please select at least one item to checkout.');
+        //     return redirect()->route('cart.index');
+        // }
 
         // if ($cartItems->isEmpty()) {
         //     session()->flash('error', 'Your cart is empty. Please add items to your cart before proceeding to payment.');
@@ -41,10 +56,10 @@ class PaymentController extends Controller
         // $subtotal = $cartItems->sum(function ($item) {
         //     return $item->productPrice * $item->productQty;
         // });
-        $subtotal = 0;
-        foreach ($selectedItems as $item) {
-            $subtotal += $item->productPrice * $item->productQty;
-        }
+        // $subtotal = 0;
+        // foreach ($selectedItems as $item) {
+        //     $subtotal += $item->productPrice * $item->productQty;
+        // }
 
         session(['subtotal' => $subtotal]); // Update subtotal in the session
 

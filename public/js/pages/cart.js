@@ -137,18 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// Prevent form submission if no items are selected
-document.addEventListener('DOMContentLoaded', function () {
-    const checkoutForm = document.querySelector('.subtotal-checkout form');
-    checkoutForm.addEventListener('submit', function (e) {
-        const checkedItems = document.querySelectorAll('.selected-product:checked');
-        if (checkedItems.length === 0) {
-            e.preventDefault();
-            alert('Please select at least one item to checkout.');
-        }
-    });
-});
-
 document.addEventListener('DOMContentLoaded', function () {
     const checkoutForm = document.getElementById('checkout-form');
     

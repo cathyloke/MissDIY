@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
+use App\Models\User;
 
 class PaymentController extends Controller
 {
@@ -17,10 +18,7 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         $userId = Auth::id();
-        // $cartItems = Cart::where('userId', $userId)->get();
         $selectedProductIds = $request->input('selected_product', []); // Get selected product IDs from the request
-
-        // dd($cartItems); // Check the cart items
 
         if (empty($selectedProductIds)) {
             session()->flash('error', 'Please select at least one item to checkout.');
@@ -36,36 +34,12 @@ class PaymentController extends Controller
             return $item->productPrice * $item->productQty;
         });
 
-        // $selectedItems = array();
-        // foreach ($cartItems as $item) {
-        //     if ($request->has('selected_product') && in_array($item->id, $request->input('selected_product'))) {
-        //         $selectedItems[] = $item;
-        //     }
-        // }
-
-        // if (empty($selectedItems)) {
-        //     session()->flash('error', 'Please select at least one item to checkout.');
-        //     return redirect()->route('cart.index');
-        // }
-
-        // if ($cartItems->isEmpty()) {
-        //     session()->flash('error', 'Your cart is empty. Please add items to your cart before proceeding to payment.');
-        //     return redirect()->route('cart.index');
-        // } 
-
-        // $subtotal = $cartItems->sum(function ($item) {
-        //     return $item->productPrice * $item->productQty;
-        // });
-        // $subtotal = 0;
-        // foreach ($selectedItems as $item) {
-        //     $subtotal += $item->productPrice * $item->productQty;
-        // }
-
         session(['subtotal' => $subtotal]); // Update subtotal in the session
 
-        return view('payment', compact('selectedItems', 'subtotal'));
-        // return view('payment', compact('cartItems'));
-        // return redirect()->route('payment.index');
+        $user = User::find($userId);
+        $userAddress = $user->address;
+
+        return view('payment', compact('selectedItems', 'subtotal', 'userAddress'));
     }
 
     // Process payment
@@ -77,7 +51,6 @@ class PaymentController extends Controller
 
         $userId = Auth::id();
 
-        // Handle different payment methods
         switch ($request->payment_method) {
             case 'touch_n_go':
                 $paymentType = 'Touch n Go eWallet';
@@ -85,28 +58,31 @@ class PaymentController extends Controller
 
             case 'card':
                 $request->validate([
-                    'card_number' => 'required|digits:16',
-                    'cardholder_name' => 'required|string',
+                    'card_number' => 'required|digits:16|numeric',
+                    'cardholder_name' => 'required|string|min:3|max:255',
                     'expiry_date' => 'required|date_format:m/y',
-                    'cvv' => 'required|digits:3',
+                    'cvv' => 'required|digits:3|numeric',
                 ]);
                 $paymentType = 'Credit/Debit Card';
                 break;
-            
+
             case 'online_banking':
                 $request->validate([
                     'bank_name' => 'required|string',
-                    'account_number' => 'required|string',
+                    'account_number' => 'required|string|min:10',
                 ]);
                 $paymentType = 'Online Banking';
                 break;
-                
+
             default:
-                return back()->withErrors(['payment_method' => 'Invalid payment method selected.']);                
+                return redirect()->back()->withErrors(['payment_method' => 'Invalid payment method selected.']);
+                // return response()->json([
+                //     'success' => false,
+                //     'errors' => ['payment_method' => 'Invalid payment method selected.'],
+                // ]);
         }
 
-        // Clear cart
-        Cart::where('userId', $userId)->delete();
+        Cart::where('userId', $userId)->delete(); // Clear cart after successful payment
 
         return redirect()->route('home')->with('success', 'Payment successful! Your order has been placed.');
     }

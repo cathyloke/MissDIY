@@ -50,6 +50,16 @@
             <form action="{{ route('payment.process') }}" method="POST" id="payment-form">
                   @csrf
 
+                  @if ($errors->any())
+                     <div class="alert alert-danger">
+                        <ul>
+                              @foreach ($errors->all() as $error)
+                                 <li>{{ $error }}</li>
+                              @endforeach
+                        </ul>
+                     </div>
+                  @endif
+
                   <div class="payment-section">
                      <div class="payment-method">
                         <label for="payment_method" class="payment-label">Select Payment Method:</label>
@@ -60,36 +70,27 @@
                               <option value="online_banking" {{ old('payment_method') == 'online_banking' ? 'selected' : '' }}>Online Banking</option>
                         </select>
 
-                        @error('payment_method')
-                              <div class="error-message">{{ $message }}</div>
-                        @enderror
+                        <div class="error-message" id="payment_method_error"></div>
                      </div>
 
                      {{-- Card Payment --}}
                      <div id="card-fields" style="display:none;">
                         <label for="card_number">Card Number:</label>
                         <input type="text" name="card_number" value="{{ old('card_number') }}">
-                        @error('card_number')
-                              <div class="error-message">{{ $message }}</div>
-                        @enderror
+                        <div class="error-message" id="card_number_error"></div>
 
                         <label for="cardholder_name">Cardholder Name:</label>
                         <input type="text" name="cardholder_name" value="{{ old('cardholder_name') }}">
-                        @error('cardholder_name')
-                              <div class="error-message">{{ $message }}</div>
-                        @enderror
+                        <div class="error-message" id="cardholder_name_error"></div>
 
                         <label for="expiry_date">Expiry Date:</label>
                         <input type="text" name="expiry_date" value="{{ old('expiry_date') }}" placeholder="MM/YY">
-                        @error('expiry_date')
-                              <div class="error-message">{{ $message }}</div>
-                        @enderror
+                        <div class="error-message" id="expiry_date_error"></div>
 
                         <label for="cvv">CVV:</label>
                         <input type="text" name="cvv" value="{{ old('cvv') }}">
-                        @error('cvv')
-                              <div class="error-message">{{ $message }}</div>
-                        @enderror
+                        <div class="error-message" id="cvv_error"></div>
+
                      </div>
 
                      {{-- Online Banking --}}
@@ -102,15 +103,11 @@
                               <option value="rhb" {{ old('bank_name') == 'rhb' ? 'selected' : '' }}>RHB</option>
                               <option value="public_bank" {{ old('bank_name') == 'public_bank' ? 'selected' : '' }}>Public Bank</option>
                         </select>
-                        @error('bank_name')
-                              <div class="error-message">{{ $message }}</div>
-                        @enderror
+                        <div class="error-message" id="bank_name_error"></div>
 
                         <label for="account_number">Account Number:</label>
                         <input type="text" name="account_number" value="{{ old('account_number') }}">
-                        @error('account_number')
-                              <div class="error-message">{{ $message }}</div>
-                        @enderror
+                        <div class="error-message" id="account_number_error"></div>
                      </div>
 
                      {{-- Touch n Go --}}
@@ -125,14 +122,47 @@
       </div>
    </section>
 
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
    <script>
       function togglePaymentFields() {
          const method = document.getElementById('payment_method').value;
-
          document.getElementById('card-fields').style.display = (method === 'card') ? 'block' : 'none';
          document.getElementById('banking-fields').style.display = (method === 'online_banking') ? 'block' : 'none';
          document.getElementById('touch-n-go-fields').style.display = (method === 'touch_n_go') ? 'block' : 'none';
       }
+
+      $('#payment-form').submit(function(e) {
+         e.preventDefault();
+
+         // Clear previous errors
+         $('.error-message').html('');
+
+         let formData = $(this).serialize();
+
+         $.ajax({
+            type: 'POST',
+            url: '{{ route("payment.process") }}',
+            data: formData,
+            success: function(response) {
+               alert(response.message);
+               window.location.href = '{{ route("home") }}';
+            },
+            error: function(xhr) {
+               if (xhr.status === 422) {
+                  let errors = xhr.responseJSON.errors;
+                  for (let field in errors) {
+                     $('#' + field + '_error').html(errors[field][0]);
+                  }
+               }
+            }
+         });
+      });
+
+      $(document).ready(function() {
+         togglePaymentFields();
+         $('#payment_method').on('change', togglePaymentFields);
+      });
    </script>
    
 </body>

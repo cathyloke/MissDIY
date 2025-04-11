@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Cart;
 use App\Models\User;
 
@@ -39,51 +40,63 @@ class PaymentController extends Controller
         $user = User::find($userId);
         $userAddress = $user->address;
 
-        return view('payment', compact('selectedItems', 'subtotal', 'userAddress'));
+        return view('payment.payment', compact('selectedItems', 'subtotal', 'userAddress'));
     }
 
     // Process payment
     public function process(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'payment_method' => 'required',
         ]);
 
-        $userId = Auth::id();
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
+        $paymentType = '';
         switch ($request->payment_method) {
             case 'touch_n_go':
                 $paymentType = 'Touch n Go eWallet';
                 break;
 
             case 'card':
-                $request->validate([
-                    'card_number' => 'required|digits:16|numeric',
+                $validator = Validator::make($request->all(), [
+                    'card_number' => 'required|numeric',
                     'cardholder_name' => 'required|string|min:3|max:255',
                     'expiry_date' => 'required|date_format:m/y',
                     'cvv' => 'required|digits:3|numeric',
                 ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
+                }
+
                 $paymentType = 'Credit/Debit Card';
                 break;
 
             case 'online_banking':
-                $request->validate([
+                $validator = Validator::make($request->all(), [
                     'bank_name' => 'required|string',
                     'account_number' => 'required|string|min:10',
                 ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
+                }
+
                 $paymentType = 'Online Banking';
                 break;
 
             default:
-                return redirect()->back()->withErrors(['payment_method' => 'Invalid payment method selected.']);
-                // return response()->json([
-                //     'success' => false,
-                //     'errors' => ['payment_method' => 'Invalid payment method selected.'],
-                // ]);
+                return response()->json(['errors' => ['payment_method' => ['Invalid payment method']]], 422);
         }
 
-        Cart::where('userId', $userId)->delete(); // Clear cart after successful payment
+        Cart::where('userId', Auth::id())->delete();
 
-        return redirect()->route('home')->with('success', 'Payment successful! Your order has been placed.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Payment successful! Your order has been placed.',
+        ]);
     }
 }

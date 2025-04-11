@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\Voucher;
 
 class PaymentController extends Controller
 {
@@ -15,11 +16,10 @@ class PaymentController extends Controller
         $this->middleware('auth');
     }
 
-    // Show payment page
     public function index(Request $request)
     {
         $userId = Auth::id();
-        $selectedProductIds = $request->input('selected_product', []); // Get selected product IDs from the request
+        $selectedProductIds = $request->input('selected_product', []); // get selected product IDs from request
 
         if (empty($selectedProductIds)) {
             session()->flash('error', 'Please select at least one item to checkout.');
@@ -28,14 +28,14 @@ class PaymentController extends Controller
 
         // fetch only selected cart items for current user
         $selectedItems = Cart::where('userId', $userId)
-                            ->whereIn('id', $selectedProductIds) // Filter by selected product IDs
+                            ->whereIn('id', $selectedProductIds) // filter by selected product IDs
                             ->get();
         
         $subtotal = $selectedItems->sum(function($item) {
             return $item->productPrice * $item->productQty;
         });
 
-        session(['subtotal' => $subtotal]); // Update subtotal in the session
+        session(['subtotal' => $subtotal]); // update subtotal in session
 
         $user = User::find($userId);
         $userAddress = $user->address;
@@ -43,7 +43,6 @@ class PaymentController extends Controller
         return view('payment.payment', compact('selectedItems', 'subtotal', 'userAddress'));
     }
 
-    // Process payment
     public function process(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -98,5 +97,34 @@ class PaymentController extends Controller
             'success' => true,
             'message' => 'Payment successful! Your order has been placed.',
         ]);
+    }
+
+    public function applyDiscount(Request $request)
+    {
+        $discountCode = $request->input('discount_code');
+        $subtotal = (float) $request->input('subtotal');
+
+        $voucher = Voucher::where('code', $discountCode)
+                        ->where('expiration_date', '>', now())
+                        ->where('validity', 'active')
+                        ->first();
+        
+        if ($voucher) {
+            $discountAmount = 0;
+
+            if ($voucher->type === 'percentage') {
+                $discountAmount = ($voucher->discount / 100) * $subtotal;
+            } elseif ($voucher->type === 'fixed') {
+                $discountAmount = min($voucher->discount, $subtotal); // ensure discount doesn't exceed subtotal
+            }
+
+            $discountedTotal = $subtotal - $discountAmount;
+            return response()->json([
+                'success' => true,
+                'discountAmount' => (float) $discountAmount,
+                'discountedTotal' => (float) $discountedTotal,
+            ]);
+        }
+        return response()->json(['success' => false]);
     }
 }

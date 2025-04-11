@@ -47,6 +47,15 @@
 
             <p class="subtotal">Subtotal: RM {{ number_format($subtotal, 2) }}</p>
 
+            <!-- Discount Code Section -->
+            <div class="discount-section">
+               <label for="discount_code">Discount Code:</label>
+               <input type="text" name="discount_code" id="discount_code" placeholder="Enter discount code" value="{{ old('discount_code') }}">
+               <button type="button" id="apply_discount" class="apply-discount-btn">Apply</button>
+               <p id="discount_message" class="discount-message"></p>
+               <p id="discounted_total" class="discounted-total" style="display:none;">Discounted Total: RM <span id="discounted_amount"></span></p>
+            </div>
+
             <form action="{{ route('payment.process') }}" method="POST" id="payment-form">
                   @csrf
 
@@ -132,11 +141,46 @@
          document.getElementById('touch-n-go-fields').style.display = (method === 'touch_n_go') ? 'block' : 'none';
       }
 
+      // discount code functionality
+      $('#apply_discount').click(function() {
+         var discountCode = $('#discount_code').val().trim();
+         var subtotal = parseFloat("{{ $subtotal }}");  // Get the current subtotal from your controller
+
+         if (discountCode) {
+            $.ajax({
+                  url: "{{ route('payment.apply_discount') }}",
+                  type: 'POST',
+                  data: {
+                     _token: '{{ csrf_token() }}',
+                     discount_code: discountCode,
+                     subtotal: subtotal,
+                  },
+                  success: function(response) {
+                     if (response.success) {
+                        $('#discount_message').html('Discount applied: RM ' + parseFloat(response.discountAmount).toFixed(2));
+                        $('#discounted_amount').html(parseFloat(response.discountedTotal).toFixed(2));
+                        $('#discounted_total').show();
+                     } else {
+                        $('#discount_message').html('Invalid discount code.');
+                        $('#discounted_total').hide();
+                     }
+                  },
+                  error: function(xhr, status, error) {
+                     console.error('Error applying discount:', error);
+                  }
+            });
+            console.log('Discount Code Sent:', discountCode);
+
+         } else {
+            $('#discount_message').html('Please enter a discount code.');
+            $('#discounted_total').hide();
+         }
+      });
+
       $('#payment-form').submit(function(e) {
          e.preventDefault();
 
-         // Clear previous errors
-         $('.error-message').html('');
+         $('.error-message').html(''); // Clear previous errors
 
          let formData = $(this).serialize();
 

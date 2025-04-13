@@ -360,3 +360,124 @@
         grid-template-columns: 1fr;
     }
 }
+
+.edit-product-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.edit-product-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+input[type="text"],
+select,
+input[type="file"] {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+select:focus {
+    border-color: #007BFF;
+}
+
+.product-image-preview {
+    margin-top: 15px;
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.save-btn:hover {
+    background-color: #0056b3;
+}
+
+.back-to-list-btn {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-to-list-btn:hover {
+    text-decoration: underline;
+}
+
+.toggle-status {
+    display: flex;
+    gap: 15px;
+    margin: 10px 0;
+}
+
+.active-btn,
+.inactive-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.active-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.inactive-btn {
+    background-color: #ccc;
+    color: #444;
+}
+
+.active-btn:hover {
+    background-color: #218838;
+}
+
+.inactive-btn:hover {
+    background-color: #b0b0b0;
+}
+
+.text-danger {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}

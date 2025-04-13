@@ -36,8 +36,16 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 // Product
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
-// Product Details
+Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
+
+Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
+Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+
+
+
 
 //RL Note to SQ: I put the code from ur middleware outside first ahh, if not my cart can't be shown
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -54,7 +62,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-
     Route::get('/profile/orders', [ProfileController::class, 'orders'])->name('profile.orders');
 });
 

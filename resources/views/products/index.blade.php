@@ -26,6 +26,13 @@
         <button onclick="toggleFilter()"><i class="fa-solid fa-filter"></i></button>
     </div>
 
+    <!-- Create Product Button -->
+    <div class="create-product-btn-container">
+        <a href="{{ route('products.create') }}" class="create-product-btn">
+            <i class="fas fa-plus"></i> Create New Product
+        </a>
+    </div>
+
     <!-- Filter Panel -->
     <div id="filterPanel" class="filter-panel hidden">
         <div class="filter-panel-header">

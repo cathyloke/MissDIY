@@ -36,10 +36,13 @@
                         </div>
                     </div>
                     
-                <!-- If CUSTOMER -- > Add To Cart; ADMIN -- > Edit -->
                     <button type="submit" class="add-to-cart-btn" >
                         <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
                     </button>
+
+                    <a href="{{ route('products.edit', $product->id) }}" class="edit-btn">
+                        <i class="fas fa-edit mr-2"></i>Edit Product
+                    </a>
                 </form>
             </div>
         </div>

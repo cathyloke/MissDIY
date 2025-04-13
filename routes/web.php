@@ -66,6 +66,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::put('/sale/{sale}/complete', [SalesController::class, 'markAsCompleted'])->name('sale.complete');
+Route::put('/sale/{sale}/delivering', [SalesController::class, 'markAsDelivering'])->name('sale.delivering');
 
 // Checkout to payment
 Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');

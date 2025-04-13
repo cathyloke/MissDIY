@@ -19,47 +19,56 @@
     @if (session('error'))
         <p class="error-message">{{ session('error') }}</p>
     @endif
-    
-    <!--Product-->
-    <section class="cart">
-        <!-- Select all checkbox -->
-        <div class="checkbox">
-            <input type="checkbox" id="select-all" onchange="selectAll(this)">
-            <label for="select-all">Select all</label>
-        </div>
-        
-        @foreach ($cartItems as $cartItem)
-            <div class="single-product" data-id="{{ $cartItem->id }}">
-                <div class="checkbox">
-                    <input type="checkbox" class="selected-product" value="{{ $cartItem->id }}">
-                    <button type="submit" class="remove-icon" onclick="removeProduct('{{ $cartItem->id }}')">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
 
-                <div class="product-image">
-                    <img src="{{ asset('images/' . $cartItem->productImg) }}" alt="product image">
-                </div>
-                <div class="product-name-price-quantity">
-                    <div class="product-name">{{ $cartItem->productName }} </div>
-                    <div class="product-price">RM <span
-                            class="price">{{ number_format($cartItem->productPrice, 2) }}</span></div>
-                    <div class="product-quantity">
-                        <button type="button" name="decrement"
-                            onclick="updateQuantity('{{ $cartItem->id }}', -1)">-</button>
-                        <input type="text" name="product-quantity" id="product-quantity-{{ $cartItem->id }}"
-                            class="product-quantity-input" value="{{ $cartItem->product_qty }}" min="1">
-                        <button type="button" name="increment"
-                            onclick="updateQuantity('{{ $cartItem->id }}', 1)">+</button>
+    <!--Product-->
+    @if ($cartItems->isEmpty())
+        <div class="empty-cart">
+            <h2>Your cart is empty!</h2>
+            <p>Looks like you haven't added anything to your cart yet.</p>
+            <p>Start <a href="{{ route('products.index') }}">shopping</a> now!</p>
+        </div>
+    @else
+        <section class="cart">
+            <!-- Select all checkbox -->
+            <div class="checkbox">
+                <input type="checkbox" id="select-all" onchange="selectAll(this)">
+                <label for="select-all">Select all</label>
+            </div>
+
+            @foreach ($cartItems as $cartItem)
+                <div class="single-product" data-id="{{ $cartItem->id }}">
+                    <div class="checkbox">
+                        <input type="checkbox" class="selected-product" value="{{ $cartItem->id }}">
+                        <button type="submit" class="remove-icon" onclick="removeProduct('{{ $cartItem->id }}')">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+
+                    <div class="product-image">
+                        <img src="{{ asset('images/' . $cartItem->productImg) }}" alt="product image">
+                    </div>
+                    <div class="product-name-price-quantity">
+                        <div class="product-name">{{ $cartItem->productName }} </div>
+                        <div class="product-price">RM <span
+                                class="price">{{ number_format($cartItem->productPrice, 2) }}</span></div>
+                        <div class="product-quantity">
+                            <button type="button" name="decrement"
+                                onclick="updateQuantity('{{ $cartItem->id }}', -1)">-</button>
+                            <input type="text" name="product-quantity" id="product-quantity-{{ $cartItem->id }}"
+                                class="product-quantity-input" value="{{ $cartItem->productQty }}" min="1">
+                            <button type="button" name="increment"
+                                onclick="updateQuantity('{{ $cartItem->id }}', 1)">+</button>
+                        </div>
+                    </div>
+                    <div class="total-price">
+                        <p>RM <span
+                                class="total">{{ number_format($cartItem->productPrice * $cartItem->productQty, 2) }}
+                            </span></p>
                     </div>
                 </div>
-                <div class="total-price">
-                    <p>RM <span class="total">{{ number_format($cartItem->productPrice * $cartItem->productQty, 2) }}
-                        </span></p>
-                </div>
-            </div>
-        @endforeach
-    </section>
+            @endforeach
+        </section>
+    @endif
 
     <section class="fixed-bottom-bar">
         <!-- Apply voucher
@@ -75,7 +84,7 @@
         <div class="subtotal-checkout">
             <!--Subtotal-->
             <div class="subtotal">
-                <h3>Subtotal: RM <span class="subtotal-amount">{{ session('subtotal') ?? 0.00 }}</span></h3>
+                <h3>Subtotal: RM <span class="subtotal-amount">{{ session('subtotal') ?? 0.0 }}</span></h3>
             </div>
 
             <!-- Checkout Form -->

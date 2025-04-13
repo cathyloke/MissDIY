@@ -4103,6 +4103,8 @@ textarea.form-control-lg {
   .navbar-expand-md .navbar-collapse {
     display: flex !important;
     flex-basis: auto;
+    padding: 15px;
+    z-index: 1000;
   }
   .navbar-expand-md .navbar-toggler {
     display: none;
@@ -4363,6 +4365,7 @@ textarea.form-control-lg {
   background-clip: border-box;
   border: var(--bs-card-border-width) solid var(--bs-card-border-color);
   border-radius: var(--bs-card-border-radius);
+  margin-top: 50px;
 }
 .card > hr {
   margin-right: 0;

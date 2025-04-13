@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\Sale;
 
 class ProfileController extends Controller
 {
@@ -15,7 +17,7 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        $user = \App\Models\User::find(Auth::id());
+        $user = User::find(Auth::id());
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -32,8 +34,16 @@ class ProfileController extends Controller
 
     public function orders()
     {
-        $user = \App\Models\User::find(Auth::id());
-        $orders = $user->sales()->latest()->get();
-        return view('profile.orders', compact('orders'));
+        if(Auth::user()->isCustomer()){
+            $user = User::find(Auth::id());
+            $orders = $user->sales()->latest()->get();
+            return view('profile.orders', compact('orders'));
+        }
+        else{
+            $pendingOrders = Sale::where('status', 'pending')->latest()->get();
+            $deliveringOrders = Sale::where('status', 'delivering')->latest()->get();
+            $completedOrders = Sale::where('status', 'completed')->latest()->get();
+            return view('profile.orders', compact('pendingOrders', 'deliveringOrders', 'completedOrders'));
+        }
     }
 }

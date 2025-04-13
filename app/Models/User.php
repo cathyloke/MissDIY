@@ -52,4 +52,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Sale::class, 'userId', 'id');
     }
+
+    public function isAdmin()
+    {
+        return $this->type == 'admin';
+    }
+    
+    public function isCustomer()
+    {
+        return $this->type == 'customer';
+    }
 }

@@ -51,7 +51,7 @@ class CategoryController extends Controller
 
     public function deactivate(Category $category): RedirectResponse
     {
-        $category->delete();
+        $category->delete(); // Soft delete the category
 
         return redirect()->route('categories.index')->with('success', 'Category deactivated successfully.');
     }

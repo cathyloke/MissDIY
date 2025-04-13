@@ -22,64 +22,63 @@ use App\Http\Controllers\CategoryController;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
-
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-
-// Route::get('/cart', function(){
-//     return view('cart');
-// });
-
-// Product
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-
-Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-
-
-Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
-Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
-
-
-
-
-//RL Note to SQ: I put the code from ur middleware outside first ahh, if not my cart can't be shown
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add/{productId}', [CartController::class, 'addToCart'])->name('cart.add');
-Route::delete('/cart/remove/{productId}', [CartController::class, 'removeProduct'])->name('cart.remove');
-Route::post('cart/update/{productId}', [CartController::class, 'updateCartQuantity']);
+Route::get('/', [HomeController::class, 'index']);
 
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', function () {
-        return view('profile.show');
-    })->name('profile.show');
 
+    // Home
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    
+    // Product
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Sales
     Route::get('/profile/orders', [ProfileController::class, 'orders'])->name('profile.orders');
+
+    Route::middleware(['admin'])->group(function(){
+        // CUD products
+        Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+        Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+        Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
+
+        // CRUD Category
+        Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+        Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{category}/deactivate', [CategoryController::class, 'deactivate'])->name('categories.deactivate');
+        Route::patch('/categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+
+        // Sales
+        Route::put('/sale/{sale}/delivering', [SalesController::class, 'markAsDelivering'])->name('sale.delivering');
+    });
+
+    Route::middleware(['customer'])->group(function(){
+        // Cart
+        Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+        Route::post('/cart/add/{productId}', [CartController::class, 'addToCart'])->name('cart.add');
+        Route::delete('/cart/remove/{productId}', [CartController::class, 'removeProduct'])->name('cart.remove');
+        Route::post('cart/update/{productId}', [CartController::class, 'updateCartQuantity']);
+
+        // Checkout to payment
+        Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
+        Route::post('/payment', [PaymentController::class, 'process'])->name('payment.process');
+        Route::post('/payment/apply-discount', [PaymentController::class, 'applyDiscount'])->name('payment.apply_discount');
+
+        // Sales
+        Route::put('/sale/{sale}/complete', [SalesController::class, 'markAsCompleted'])->name('sale.complete');
+    });
+
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
 });
-
-Route::put('/sale/{sale}/complete', [SalesController::class, 'markAsCompleted'])->name('sale.complete');
-Route::put('/sale/{sale}/delivering', [SalesController::class, 'markAsDelivering'])->name('sale.delivering');
-
-// Checkout to payment
-Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
-Route::post('/payment', [PaymentController::class, 'process'])->name('payment.process');
-Route::post('/payment/apply-discount', [PaymentController::class, 'applyDiscount'])->name('payment.apply_discount');
-
-
-Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-Route::delete('/categories/{category}/deactivate', [CategoryController::class, 'deactivate'])->name('categories.deactivate');
-Route::patch('/categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
-
 

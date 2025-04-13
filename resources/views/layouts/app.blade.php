@@ -43,7 +43,7 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto topnav-right">
                         @if (Auth::check())
-                            <a href="/">Home</a>
+                            <a href="/home">Home</a>
                             <div class="dropdown">
                                 <a href="{{ route('products.index') }}" class="dropbtn">
                                     Products <i class="fa fa-caret-down"></i>

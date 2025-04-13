@@ -10,6 +10,7 @@
 </head>
 <body>
     <x-header/>
+
     <!-- Catogory -->
     <div class="category-breadcrumb">
         <!-- Plain text for users, and href for admin to edit -->

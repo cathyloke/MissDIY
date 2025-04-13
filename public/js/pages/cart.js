@@ -30,7 +30,14 @@ function removeProduct(productId){
                 //update subtotal
                 updateSubtotal();
             }
+            
             console.log(data.success);
+            
+            // Check if cart is now empty
+            const remainingItems = document.querySelectorAll('.single-product');
+            if (remainingItems.length === 0) {
+                location.reload();
+            }
         }else{
             console.log(data.error);
         }
@@ -57,12 +64,8 @@ function updateQuantity(productId, change){
         let price = parseFloat(cartItem.querySelector(".price").innerText);
         let total = cartItem.querySelector(".total");
         total.innerText = (price*newQuantity).toFixed(2);
-        //update subtotal if the product is selected
-        let checkbox = cartItem.querySelector("input[name='selected_product']");
-        if(checkbox.checked){
-            updateSubtotal();
-        }
-        
+        //update subtotal
+        updateSubtotal();
         // update product quantity in database
         fetch(`/cart/update/${productId}`, {
             method: 'POST',
@@ -109,17 +112,6 @@ function updateSubtotal(){
     document.querySelector('.subtotal-amount').textContent = subtotal.toFixed(2);
 }
 
-function applyVoucher(){
-    let voucherInput = document.getElementById("voucher-code").value;
-    let deliveryFee = 8;
-    if(voucherInput === "freedelivery"){
-        deliveryFee = 0;
-        document.getElementById("voucher-message").innerText = "Voucher Applied: Free Delivery!";
-    }else{
-        document.getElementById("voucher-message").innerText = "Invalid Voucher!";
-    }
-
-}
 
 // Select all checkboxes
 function selectAll(source) {

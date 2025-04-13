@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Shopping Cart</title>
+@section('content')
     <link rel="stylesheet" href="{{ asset('css/pages/cart.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
     <script src="{{ asset('js/pages/cart.js') }}"></script>
-    <script src="https://kit.fontawesome.com/25b5310acf.js" crossorigin="anonymous"></script>
-</head>
 
-<body>
-    <!--Navbar-->
-    <x-header />
 
     @if (session('error'))
         <p class="error-message">{{ session('error') }}</p>
@@ -61,8 +50,7 @@
                         </div>
                     </div>
                     <div class="total-price">
-                        <p>RM <span
-                                class="total">{{ number_format($cartItem->productPrice * $cartItem->productQty, 2) }}
+                        <p>RM <span class="total">{{ number_format($cartItem->productPrice * $cartItem->productQty, 2) }}
                             </span></p>
                     </div>
                 </div>
@@ -71,15 +59,6 @@
     @endif
 
     <section class="fixed-bottom-bar">
-        <!-- Apply voucher
-        <div class="voucher">
-            <div class="apply-voucher">
-                <i class="fa-solid fa-ticket"></i>
-                <input type="text" id="voucher-code" placeholder="Enter voucher code">
-                <button onclick="applyVoucher()">Apply</button>
-            </div>
-            <p id="voucher-message"></p>
-        </div> -->
 
         <div class="subtotal-checkout">
             <!--Subtotal-->
@@ -95,6 +74,5 @@
         </div>
     </section>
 
-</body>
 
-</html>
+@endsection

@@ -5,7 +5,7 @@
     <div class="welcome-content">
         <h1>Welcome to Miss DIY</h1>
         <p>Your one-stop shop for DIY home projects and tools.</p>
-        <a href="#about-us" class="btn">Explore</a>
+        <a href="#about-us" class="explore-btn">Explore</a>
     </div>
 </section>
 
@@ -25,27 +25,22 @@
 
 <!--Product-->
 <section class="featured-products">
-    <h2>Featured Products</h2>
+    <h2>New Arrivals</h2>
     <div class="product-grid">
+        @foreach($newProducts as $product)
         <div class="product">
-            <img src="images/missDIY.png" alt="Product 1">
-            <h3>Wooden Craft Kit</h3>
-            <p>RM 15.99</p>
-            <button>Add to Cart</button>
+            <img src="{{ asset('images/'. $product->image) }}" alt="{{ $product->name }}">
+            <h3>{{ $product->name }}</h3>
+            <p>$ {{ number_format($product->price, 2) }}</p>
         </div>
-        <div class="product">
-            <img src="images/missDIY.png" alt="Product 2">
-            <h3>DIY Paint Set</h3>
-            <p>RM 9.99</p>
-            <button>Add to Cart</button>
-        </div>
-        <div class="product">
-            <img src="images/missDIY.png" alt="Product 3">
-            <h3>Tool Organizer</h3>
-            <p>RM 12.49</p>
-            <button>Add to Cart</button>
-        </div>
+        @endforeach
     </div>
-    <a href="/" class="btn">Shop now</a>
+    <a href={{ route('products.index') }} class="explore-btn">Shop now</a>
 </section>
+@if (session('error'))
+    <script>
+        alert('{{ session('error') }}');
+    </script>
+@endif
+
 @endsection

@@ -83,19 +83,22 @@ class ProductController extends Controller
     {
         $product = Product::withTrashed()->findOrFail($id);
 
-        // Handle status toggle
         if ($request->has('status')) {
-            if ($request->status == 'unavailable' && !$product->trashed()) {
-                $product->delete(); // Soft delete
+            if ($request->status == 'unavailable') {
+                $product->quantity = 0;
+                $product->save();
+                if (!$product->trashed()) {
+                    $product->delete();
+                }
             } elseif ($request->status == 'available' && $product->trashed()) {
-                $product->restore(); // Restore
+                $product->restore();
             }
         }
 
-        // Validate normal update
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'quantity' => 'required|numeric',
             'categoryId' => 'required|exists:category,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -103,6 +106,11 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->price = $request->price;
         $product->categoryId = $request->categoryId;
+
+        // Only overwrite quantity if status is 'available'
+        if ($request->status === 'available') {
+            $product->quantity = $request->quantity;
+        }
 
         if ($request->hasFile('image')) {
             if ($product->image && \File::exists(public_path('images/' . $product->image))) {
@@ -119,5 +127,6 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully!');
     }
+
 
 }

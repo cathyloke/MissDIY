@@ -36,6 +36,14 @@
             </div>
 
             <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="text" id="quantity" name="quantity" value="{{ old('quantity', $product->quantity) }}" required>
+                @error('quantity')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="category">Category:</label>
                 <select id="category" name="categoryId" required>
                     @foreach($categories as $category)
@@ -50,18 +58,13 @@
             </div>
 
             <div class="form-group">
-                <label>Status:</label>
-                <div class="toggle-status">
-                    <button type="submit" name="status" value="available"
-                        class="{{ $product->deleted_at ? 'inactive-btn' : 'active-btn' }}">
-                        Available
-                    </button>
-                    <button type="submit" name="status" value="unavailable"
-                        class="{{ $product->deleted_at ? 'active-btn' : 'inactive-btn' }}">
-                        Unavailable
-                    </button>
-                </div>
+                <label for="status">Status:</label>
+                <select id="status" name="status" required>
+                    <option value="available" {{ !$product->trashed() ? 'selected' : '' }}>Available</option>
+                    <option value="unavailable" {{ $product->trashed() ? 'selected' : '' }}>Unavailable</option>
+                </select>
             </div>
+            
 
             <div class="form-group">
                 <label for="image">Product Image:</label>

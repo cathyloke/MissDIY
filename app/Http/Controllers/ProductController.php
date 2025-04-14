@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 
 
 class ProductController extends Controller
@@ -15,30 +15,54 @@ class ProductController extends Controller
         $categoryId = $request->query('categoryId');
         $sortOrder = $request->query('sort', 'asc'); 
         
-        $categories = Category::all();
+        $categories = Category::query();
+
         $query = Product::query();
+
+        if (Gate::allows('isCustomer')) {
+            $categories->whereNull('deleted_at');
+            $query->whereNull('deleted_at');
         
-        if ($categoryId) {
-            $query->where('categoryId', $categoryId);
+            if ($categoryId) {
+                $category = Category::withoutTrashed()->find($categoryId);
+                if (!$category) {
+                    $products = collect(); 
+                } else {
+                    $query->where('categoryId', $categoryId);
+                }
+            }
+        
+            $query->whereHas('category', function ($q) {
+                $q->whereNull('deleted_at');
+            });
+        } elseif (Gate::allows('isAdmin')) {
+            $query = Product::withTrashed();
+            $categories = $categories->withTrashed();
+        
+            if ($categoryId) {
+                $category = Category::withTrashed()->find($categoryId);
+                $query->where('categoryId', $categoryId);
+            }
         }
-        
+
         $products = $query->orderBy('price', $sortOrder)->get();
-        $selectedCategory = $categoryId ? Category::find($categoryId) : null;
-        
+        $categories = $categories->get();
+        $selectedCategory = $categoryId ? Category::withTrashed()->find($categoryId) : null;
+
         return view("products.index", compact('products', 'categories', 'selectedCategory', 'sortOrder'));
     }
 
+
     function show($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::withTrashed()->findOrFail($id);
 
-        if(request()->expectsJson()) {
+        if (request()->expectsJson()) {
             return response()->json($product);
         }
-        
+
         return view('products.show', compact('product'));
     }
-
 
     public function create()
     {

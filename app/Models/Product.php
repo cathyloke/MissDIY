@@ -21,7 +21,7 @@ class Product extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class, 'categoryId');
+        return $this->belongsTo(Category::class, 'categoryId')->withTrashed();
     }
 
     protected static function boot()

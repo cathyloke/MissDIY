@@ -38,16 +38,20 @@ class ProfileController extends Controller
 
     public function orders()
     {
-        if(Auth::user()->isCustomer()){
-            $user = User::find(Auth::id());
-            $orders = $user->sales()->latest()->get();
+        $user = Auth::user();
+
+        if($user->isCustomer()){
+            $orders = $user->sales()->latest()->get()->filter(fn($order)=>$user->can('view', $order));
+            // $orders = $user->sales()->latest()->get();
+            // return $orders;
             return view('profile.orders', compact('orders'));
         }
-        else{
-            $pendingOrders = Sale::where('status', 'pending')->latest()->get();
-            $deliveringOrders = Sale::where('status', 'delivering')->latest()->get();
-            $completedOrders = Sale::where('status', 'completed')->latest()->get();
-            return view('profile.orders', compact('pendingOrders', 'deliveringOrders', 'completedOrders'));
-        }
+
+        $this->authorize('viewAny', Sale::class);
+        $pendingOrders = Sale::where('status', 'pending')->latest()->get();
+        $deliveringOrders = Sale::where('status', 'delivering')->latest()->get();
+        $completedOrders = Sale::where('status', 'completed')->latest()->get();
+
+        return view('profile.orders', compact('pendingOrders', 'deliveringOrders', 'completedOrders'));
     }
 }

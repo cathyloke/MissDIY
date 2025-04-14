@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class SalesController extends Controller
 {
-    //
     public function markAsCompleted($saleId)
     {
         $sale = Sale::findOrFail($saleId);

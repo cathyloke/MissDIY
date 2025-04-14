@@ -56,17 +56,19 @@
                                         </button>
                                     </td>
 
-                                    @if (Auth::user()->isCustomer() && $order->status == 'delivering')
-                                        <td>
+                                    @can('update', $order)
+                                    <td>
+                                        @if (Auth::user()->isCustomer() && $order->status == 'delivering')
                                             <form action="{{ route('sale.complete', $order->id) }}" method="POST">
                                                 @csrf
                                                 @method('PUT')
                                                 <button type="submit" class="btn btn-light btn-sm">Received</button>
                                             </form>
-                                        </td>
-                                    @else
-                                        <td>N/A</td>
-                                    @endif
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    @endcan
                                 </tr>
                                 <tr class="collapse" id="details-{{ $order->id }}">
                                     <td colspan="6">

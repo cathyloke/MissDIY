@@ -14,6 +14,10 @@ class Sale extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
+    protected $casts = [
+        'userId' => 'integer',
+    ];
+    
     protected $fillable = [
         'id',
         'date',

@@ -36,13 +36,18 @@
                         </div>
                     </div>
                     
-                    <button type="submit" class="add-to-cart-btn" >
-                        <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
-                    </button>
+                        @can('isCustomer')
+                            <button type="submit" class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
+                            </button>
+                        @endcan
+                    
+                        @can('isAdmin')
+                            <a href="{{ route('products.edit', $product->id) }}" class="add-to-cart-btn">
+                                <i class="fas fa-edit mr-2"></i>Edit Product
+                            </a>
+                        @endcan                 
 
-                    <a href="{{ route('products.edit', $product->id) }}" class="edit-btn">
-                        <i class="fas fa-edit mr-2"></i>Edit Product
-                    </a>
                 </form>
             </div>
         </div>

@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="{{ asset('css/pages/cart.css') }}" />
     <script src="{{ asset('js/pages/cart.js') }}"></script>
 
-
     @if (session('error'))
         <p class="error-message">{{ session('error') }}</p>
     @endif
@@ -25,7 +24,7 @@
             </div>
 
             @foreach ($cartItems as $cartItem)
-                <div class="single-product" data-id="{{ $cartItem->id }}">
+            <div class="single-product {{ ($cartItem->product->trashed() || $cartItem->product->quantity <= 0) ? 'unavailable' : '' }}" data-id="{{ $cartItem->id }}">
                     <div class="checkbox">
                         <input type="checkbox" class="selected-product" value="{{ $cartItem->id }}">
                         <button type="submit" class="remove-icon" onclick="removeProduct('{{ $cartItem->id }}')">
@@ -40,14 +39,26 @@
                         <div class="product-name">{{ $cartItem->product->name }} </div>
                         <div class="product-price">RM <span
                                 class="price">{{ number_format($cartItem->product->price, 2) }}</span></div>
-                        <div class="product-quantity">
-                            <button type="button" name="decrement"
-                                onclick="updateQuantity('{{ $cartItem->id }}', -1)">-</button>
-                            <input type="text" name="product-quantity" id="product-quantity-{{ $cartItem->id }}"
-                                class="product-quantity-input" value="{{ $cartItem->quantity }}" min="1">
-                            <button type="button" name="increment"
-                                onclick="updateQuantity('{{ $cartItem->id }}', 1)">+</button>
-                        </div>
+                        @if ($cartItem->product->trashed() || $cartItem->product->quantity <= 0)
+                            <p class="unavailable-message">This product is unavailable.</p>
+                        @else
+                            <div class="product-quantity">
+                                <button type="button" name="decrement"
+                                    onclick="updateQuantity('{{ $cartItem->id }}', -1)">-</button>
+                                <input type="text" name="product-quantity" id="product-quantity-{{ $cartItem->id }}"
+                                    class="product-quantity-input"
+                                    value="{{ $cartItem->quantity }}"
+                                    min="1"
+                                    data-available="{{ $cartItem->product->quantity }}">
+                                
+                                <button type="button" name="increment"
+                                    onclick="updateQuantity('{{ $cartItem->id }}', 1)">+</button>
+                                <span class="error">
+                                    {{ $errors->first("product-quantity.{$cartItem->id}") }}
+                                </span>
+                            </div>
+                        @endif
+
                     </div>
                     <div class="total-price">
                         <p>RM <span class="total">{{ number_format($cartItem->product->price * $cartItem->quantity, 2) }}
@@ -74,5 +85,14 @@
         </div>
     </section>
 
+    <div id="errorToast" class="toast position-fixed top-0 start-50 translate-middle-x"
+        role="alert" aria-live="assertive" aria-atomic="true"
+        style="z-index: 1000; margin-top: 50px; background-color:#FFD1DC; display: none;">
+        <div class="d-flex">
+            <div class="toast-body" id="errorToastBody"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                onclick="document.getElementById('errorToast').style.display='none'"></button>
+        </div>
+    </div>
 
 @endsection

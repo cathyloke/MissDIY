@@ -48,51 +48,60 @@ function removeProduct(productId){
 }
 
 
-function updateQuantity(productId, change){
+function updateQuantity(productId, change) {
     let cartItem = document.querySelector(`.single-product[data-id="${productId}"]`);
-    if(cartItem){
-        //update quantity input
+    if (cartItem) {
         let quantityInput = cartItem.querySelector(".product-quantity-input");
         let currentQuantity = parseInt(quantityInput.value);
+        let availableQuantity = parseInt(quantityInput.dataset.available);
         let newQuantity = currentQuantity + change;
-        if(newQuantity < 1){
+
+        if (newQuantity < 1) return;
+
+        // ✅ Prevent update if it exceeds stock
+        if (newQuantity > availableQuantity) {
+            showToast("Quantity exceeds available stock!");
+            newQuantity = 1;
             return;
         }
+
         quantityInput.value = newQuantity;
 
-        //update total price of the product
+        // Update total price
         let price = parseFloat(cartItem.querySelector(".price").innerText);
         let total = cartItem.querySelector(".total");
-        total.innerText = (price*newQuantity).toFixed(2);
-        //update subtotal
+        total.innerText = (price * newQuantity).toFixed(2);
+
+        // Update subtotal
         updateSubtotal();
-        // update product quantity in database
+
+        // Send update to backend
         fetch(`/cart/update/${productId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
             },
-            body: JSON.stringify({ quantity: quantityInput.value })
+            body: JSON.stringify({ quantity: newQuantity })
         })
-        .then(response=>{
-            if(!response.ok){
-                throw new Error("Response was not ok");
-            }
+        .then(response => {
+            if (!response.ok) throw new Error("Response was not ok");
             return response.json();
         })
-        .then(data=>{
-            if(data.success){
+        .then(data => {
+            if (data.success) {
                 console.log(data.success);
-            }else{
-                console.log(data.error);
+            } else {
+                showToast(data.error);
+                quantityInput.value = 1; // fallback reset
             }
         })
-        .catch(error=>{
-            console.error("Error:", error);
-        })
+        .catch(error => {
+            showToast("Something went wrong while updating quantity.");
+        });
     }
 }
+
 
 
 function updateSubtotal(){
@@ -158,3 +167,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+
+function showToast(message) {
+    const toast = document.getElementById('errorToast');
+    const body = document.getElementById('errorToastBody');
+
+    body.textContent = message;
+    toast.style.display = 'block';
+
+    setTimeout(() => {
+        toast.style.display = 'none';
+    }, 3000);
+}

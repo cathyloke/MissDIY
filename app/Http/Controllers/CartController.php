@@ -18,6 +18,15 @@ class CartController extends Controller
 
         $cartItems = Cart::where('userId', $userId)->get();
 
+        foreach ($cartItems as $item) {
+            $product = $item->product;
+            if ($product->trashed() || $product->quantity <= 0) {
+                $item->isUnavailable = true;
+            } else {
+                $item->isUnavailable = false;
+            }
+        }
+
         session(['subtotal' => number_format(0.00, 2)]); // Initialize subtotal to 0.00
 
         return view("cart", compact('cartItems'));
@@ -28,6 +37,11 @@ class CartController extends Controller
         $product = Product::findOrFail($productId);
         $quantity = $request->input('quantity');
         $userId = Auth::id();
+
+        $error = $this->validateProductStock($product, $quantity);
+        if ($error) {
+            return redirect()->route('products.index')->with('error', $error);
+        }
 
         //Check if the product already exists in the cart
         $cartItem = Cart::where('userId', $userId)->where('productId', $productId)->first();
@@ -59,15 +73,42 @@ class CartController extends Controller
         }
     }
 
-    function updateCartQuantity(Request $request, $productId)
+    function updateCartQuantity(Request $request, $cartItemId)
     {
-        $cartItem = Cart::find($productId);
-        if ($cartItem) {
-            $cartItem->quantity = $request->input('quantity');
-            $cartItem->save();
-            return response()->json(['success' => 'Product quantity updated successfully.']);
-        } else {
-            return response()->json(['error' => 'Product not found in the cart.']);
+        $cartItem = Cart::find($cartItemId);
+
+        if (!$cartItem) {
+            return response()->json(['error' => 'Product not found in the cart.'], 404);
         }
+
+        $product = $cartItem->product;
+        $requestedQuantity = $request->input('quantity');
+
+        if ($requestedQuantity > $product->quantity) {
+            return response()->json([
+                'error' => 'Requested quantity exceeds available stock.',
+                'resetQuantity' => 1 // optional: send back value to reset
+            ], 400);
+        }
+
+        $cartItem->quantity = $requestedQuantity;
+        $cartItem->save();
+
+        return response()->json(['success' => 'Product quantity updated successfully.']);
     }
+
+    // check quantity
+    private function validateProductStock($product, $requestedQty)
+    {
+        if ($product->trashed() || $product->quantity <= 0) {
+            return 'This product is currently unavailable.';
+        }
+
+        if ($requestedQty > $product->quantity) {
+            return 'Requested quantity exceeds available stock.';
+        }
+
+        return null;
+    }
+
 }

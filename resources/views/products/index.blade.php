@@ -101,6 +101,7 @@
     </div>
 
     <!-- Add to cart toast message-->
+    <!-- success -->
     @if (session('success'))
         <div id="successToast" class="toast position-fixed top-0 start-50 translate-middle-x" style="z-index: 1000; margin-top: 50px;" role="alert" aria-live="assertive"
             aria-atomic="true" data-bs-autohide="true" data-bs-delay="2000">
@@ -108,6 +109,17 @@
                 {{ session('success') }}
             </div>
         </div>
+    @endif
+    <!-- quantity error -->
+    @if (session('error'))
+    <div id="errorToast" class="toast position-fixed top-0 start-50 translate-middle-x" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 1000; margin-top: 50px; background-color:#FFD1DC;">
+        <div class="d-flex">
+            <div class="toast-body">
+                {{ session('error') }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
     @endif
 
     <script>
@@ -210,6 +222,14 @@
             if (toastEl) {
                 const toast = new bootstrap.Toast(toastEl);
                 toast.show();
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const errorToastEl = document.getElementById('errorToast');
+            if (errorToastEl) {
+                const errorToast = new bootstrap.Toast(errorToastEl);
+                errorToast.show();
             }
         });
     </script>

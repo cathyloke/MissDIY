@@ -66,11 +66,11 @@
     color: #3E424B;
     display: flex;
     flex-direction: column;
-    z-index: 9999;
 }
 
 .filter-panel.active {
     right: 0;
+    z-index: 9999;
 }
 
 /* Updated CSS for the filter panel header */

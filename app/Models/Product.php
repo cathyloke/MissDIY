@@ -17,7 +17,7 @@ class Product extends Model
 
     protected $fillable = ['name', 'price', 'image', 'categoryId'];
 
-    protected $dates = ['deleted_at']; // ← Optional, if you're using Carbon date casting
+    protected $dates = ['deleted_at']; 
 
     public function category()
     {

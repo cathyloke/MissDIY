@@ -49,7 +49,8 @@
                                     class="product-quantity-input"
                                     value="{{ $cartItem->quantity }}"
                                     min="1"
-                                    data-available="{{ $cartItem->product->quantity }}">
+                                    data-available="{{ $cartItem->product->quantity }}"
+                                    onChange="setQuantityFromInput('{{ $cartItem->id }}')"/>
                                 
                                 <button type="button" name="increment"
                                     onclick="updateQuantity('{{ $cartItem->id }}', 1)">+</button>

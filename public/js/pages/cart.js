@@ -47,6 +47,58 @@ function removeProduct(productId){
     });
 }
 
+function setQuantityFromInput(productId) {
+    console.log('setquantity')
+    let cartItem = document.querySelector(`.single-product[data-id="${productId}"]`);
+    if (cartItem) {
+        let quantityInput = cartItem.querySelector(".product-quantity-input");
+        let input = parseInt(quantityInput.value);
+        let availableQuantity = parseInt(quantityInput.dataset.available);
+
+        // ✅ Prevent update if it exceeds stock
+        if (input > availableQuantity) {
+            showToast("Quantity exceeds available stock!");
+            input = 1;
+        } else if (input < 1 || isNaN(input)) {
+            input = 1;
+        }
+
+        quantityInput.value = input;
+
+        // Update total price
+        let price = parseFloat(cartItem.querySelector(".price").innerText);
+        let total = cartItem.querySelector(".total");
+        total.innerText = (price * input).toFixed(2);
+
+        // Update subtotal
+        updateSubtotal();
+
+        // Send update to backend
+        fetch(`/cart/update/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({ quantity: input })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Response was not ok");
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log(data.success);
+            } else {
+                showToast(data.error);
+                quantityInput.value = 1; // fallback reset
+            }
+        })
+        .catch(error => {
+            showToast("Something went wrong while updating quantity.");
+        });
+    }
+}
 
 function updateQuantity(productId, change) {
     let cartItem = document.querySelector(`.single-product[data-id="${productId}"]`);

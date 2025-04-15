@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes; 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Product extends Model
@@ -24,13 +24,23 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'categoryId')->withTrashed();
     }
 
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'productId', 'id');
+    }
+
+    public function saleDetails()
+    {
+        return $this->hasMany(SaleDetail::class, 'productId', 'id');
+    }
+
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($model) {
             if (!$model->id) {
-                $model->id = Str::random(13); 
+                $model->id = Str::random(13);
             }
         });
     }

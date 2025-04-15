@@ -36,4 +36,9 @@ class Sale extends Model
     {
         return $this->hasMany(SaleDetail::class, 'salesId', 'id');
     }
+
+    public function voucher()
+    {
+        return $this->belongsToMany(Voucher::class, 'sales_voucher', 'salesId', 'voucherId');
+    }
 }

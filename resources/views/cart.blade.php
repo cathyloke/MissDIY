@@ -34,23 +34,23 @@
                     </div>
 
                     <div class="product-image">
-                        <img src="{{ asset('images/' . $cartItem->productImg) }}" alt="product image">
+                        <img src="{{ asset('images/' . $cartItem->product->image) }}" alt="product image">
                     </div>
                     <div class="product-name-price-quantity">
-                        <div class="product-name">{{ $cartItem->productName }} </div>
+                        <div class="product-name">{{ $cartItem->product->name }} </div>
                         <div class="product-price">RM <span
-                                class="price">{{ number_format($cartItem->productPrice, 2) }}</span></div>
+                                class="price">{{ number_format($cartItem->product->price, 2) }}</span></div>
                         <div class="product-quantity">
                             <button type="button" name="decrement"
                                 onclick="updateQuantity('{{ $cartItem->id }}', -1)">-</button>
                             <input type="text" name="product-quantity" id="product-quantity-{{ $cartItem->id }}"
-                                class="product-quantity-input" value="{{ $cartItem->productQty }}" min="1">
+                                class="product-quantity-input" value="{{ $cartItem->quantity }}" min="1">
                             <button type="button" name="increment"
                                 onclick="updateQuantity('{{ $cartItem->id }}', 1)">+</button>
                         </div>
                     </div>
                     <div class="total-price">
-                        <p>RM <span class="total">{{ number_format($cartItem->productPrice * $cartItem->productQty, 2) }}
+                        <p>RM <span class="total">{{ number_format($cartItem->product->price * $cartItem->quantity, 2) }}
                             </span></p>
                     </div>
                 </div>

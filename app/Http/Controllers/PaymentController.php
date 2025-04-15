@@ -32,7 +32,7 @@ class PaymentController extends Controller
                             ->get();
         
         $subtotal = $selectedItems->sum(function($item) {
-            return $item->productPrice * $item->productQty;
+            return $item->product->price * $item->quantity;
         });
 
         session(['subtotal' => $subtotal]); // update subtotal in session

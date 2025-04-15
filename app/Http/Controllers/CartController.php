@@ -27,24 +27,19 @@ class CartController extends Controller
     {
         $product = Product::findOrFail($productId);
         $quantity = $request->input('quantity');
-        //temporary code to get userId** - cathy help change haha
-        // $userId = DB::table('users')->where('name', 'Cathy')->value('id');
         $userId = Auth::id();
 
         //Check if the product already exists in the cart
         $cartItem = Cart::where('userId', $userId)->where('productId', $productId)->first();
         if ($cartItem) {
-            $cartItem->productQty += $quantity;
+            $cartItem->quantity += $quantity;
             $cartItem->save();
         } else {
             $cart = new Cart();
             $cart->id = uniqid();
             $cart->userId = $userId;
             $cart->productId = $product->id;
-            $cart->productImg = $product->image;
-            $cart->productName = $product->name;
-            $cart->productPrice = $product->price;
-            $cart->productQty = $quantity;
+            $cart->quantity = $quantity;
             $cart->save();
         }
 
@@ -68,7 +63,7 @@ class CartController extends Controller
     {
         $cartItem = Cart::find($productId);
         if ($cartItem) {
-            $cartItem->productQty = $request->input('quantity');
+            $cartItem->quantity = $request->input('quantity');
             $cartItem->save();
             return response()->json(['success' => 'Product quantity updated successfully.']);
         } else {

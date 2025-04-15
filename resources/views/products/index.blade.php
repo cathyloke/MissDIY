@@ -14,8 +14,12 @@
     <!-- Catogory -->
     <div class="category-breadcrumb">
         <!-- Plain text for users, and href for admin to edit -->
-        <a href="{{ route('categories.index') }}">Category</a>
-        <!-- <span class="font-semibold">Category</span> -->
+        @can('isAdmin')
+            <a href="{{ route('categories.index') }}">Category</a>
+        @endcan
+        @can('isCustomer')
+            <span class="font-semibold">Category</span>
+        @endcan
          
         <span class="mx-2">>></span>
         @if(isset($category) && $category)
@@ -28,11 +32,13 @@
     </div>
 
     <!-- Create Product Button -->
-    <div class="create-product-btn-container">
-        <a href="{{ route('products.create') }}" class="create-product-btn">
-            <i class="fas fa-plus"></i> Create New Product
-        </a>
-    </div>
+    @can('isAdmin')
+        <div class="create-product-btn-container">
+            <a href="{{ route('products.create') }}" class="create-product-btn">
+                <i class="fas fa-plus"></i> Create New Product
+            </a>
+        </div>
+    @endcan 
 
     <!-- Filter Panel -->
     <div id="filterPanel" class="filter-panel hidden">

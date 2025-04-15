@@ -13,7 +13,8 @@
         "migrate": "bash ./dbMigration.sh",
         "seed": "php artisan db:seed",
         "serve": "php artisan serve",
-        "serveb": "start php artisan serve  && start http://127.0.0.1:8000"
+        "serveb": "start php artisan serve  && start http://127.0.0.1:8000",
+        "shit": "npm run dropdb && npm run migrate && npm run seed"
     },
     "devDependencies": {
         "@popperjs/core": "^2.10.2",

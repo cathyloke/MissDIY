@@ -41,9 +41,11 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         if($user->isCustomer()){
-            $orders = $user->sales()->latest()->get()->filter(fn($order)=>$user->can('view', $order));
-            // $orders = $user->sales()->latest()->get();
-            // return $orders;
+            $orders = $user->sales()->latest()->get()->filter(function ($order) use ($user) {
+                return $user->can('view', $order);
+            })->values(); 
+            
+            
             return view('profile.orders', compact('orders'));
         }
 

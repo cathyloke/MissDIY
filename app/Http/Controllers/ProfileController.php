@@ -38,14 +38,15 @@ class ProfileController extends Controller
 
     public function orders()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if($user->isCustomer()){
+        if ($user->isCustomer()) {
             $orders = $user->sales()->latest()->get()->filter(function ($order) use ($user) {
                 return $user->can('view', $order);
-            })->values(); 
-            
-            
+            })->values();
+
+
             return view('profile.orders', compact('orders'));
         }
 

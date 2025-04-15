@@ -24,9 +24,11 @@ class SalesController extends Controller
 
     public function markAsDelivering($saleId)
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
         $sale = Sale::findOrFail($saleId);
 
-        if(Auth::user()->isAdmin() && $sale->status == 'pending'){
+        if ($user->isAdmin() && $sale->status == 'pending') {
             $sale->status = 'delivering';
             $sale->save();
 

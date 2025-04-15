@@ -18,7 +18,7 @@ class CreateSalesTable extends Migration
             $table->timestamp('date');
             $table->decimal('totalAmount', 10, 2);
             $table->decimal('netTotalAmount', 10, 2);
-            $table->enum('status', ['pending', 'delivering', 'completed', 'canceled', 'returned'])->default('pending');
+            $table->enum('status', ['pending', 'delivering', 'completed'])->default('pending');
             $table->string('userId', 21);
             $table->timestamps(); 
 

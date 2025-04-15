@@ -57,17 +57,17 @@
                                     </td>
 
                                     @can('update', $order)
-                                    <td>
-                                        @if (Auth::user()->isCustomer() && $order->status == 'delivering')
-                                            <form action="{{ route('sale.complete', $order->id) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
-                                                <button type="submit" class="btn btn-light btn-sm">Received</button>
-                                            </form>
-                                        @else
-                                            N/A
-                                        @endif
-                                    </td>
+                                        <td>
+                                            @if (Auth::user()->isCustomer() && $order->status == 'delivering')
+                                                <form action="{{ route('sale.complete', $order->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-light btn-sm">Received</button>
+                                                </form>
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
                                     @endcan
                                 </tr>
                                 <tr class="collapse" id="details-{{ $order->id }}">
@@ -114,49 +114,60 @@
                 </div>
             @endif
         @else
-            <div class="panel" onclick="togglePanel(this)">
-                <div class="panel-header">Pending</div>
-                <div class="panel-content">
-                    <!--pending-->
-                    @include('profile.ordersTable', [
-                        'title' => 'pending',
-                        'orders' => $pendingOrders,
-                        'showActions' => Auth::user()->isAdmin(),
-                    ])
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Pending
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            @include('profile.ordersTable', [
+                                'title' => 'pending',
+                                'orders' => $pendingOrders,
+                                'showActions' => Auth::user()->isAdmin(),
+                            ])
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="panel" onclick="togglePanel(this)">
-                <div class="panel-header">Delivering</div>
-                <div class="panel-content">
-                    <!--delivering-->
-                    @include('profile.ordersTable', [
-                        'title' => 'delivering',
-                        'orders' => $deliveringOrders,
-                        'showActions' => false,
-                    ])
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Delivering
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            @include('profile.ordersTable', [
+                                'title' => 'delivering',
+                                'orders' => $deliveringOrders,
+                                'showActions' => false,
+                            ])
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="panel" onclick="togglePanel(this)">
-                <div class="panel-header">Completed</div>
-                <div class="panel-content">
-                    <!--completed-->
-                    @include('profile.ordersTable', [
-                        'title' => 'completed',
-                        'orders' => $completedOrders,
-                        'showActions' => false,
-                    ])
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Completed
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            @include('profile.ordersTable', [
+                                'title' => 'completed',
+                                'orders' => $completedOrders,
+                                'showActions' => false,
+                            ])
+                        </div>
+                    </div>
                 </div>
             </div>
         @endif
     </div>
 @endsection
 
-<script>
-    function togglePanel(panel) {
-        if (event.target.closest('.panel-header')) {
-            panel.classList.toggle('active');
-        }
-    }
-</script>

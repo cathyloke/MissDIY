@@ -19,4 +19,6 @@ php artisan migrate --path=database/migrations/2025_03_08_153217_create_sales_de
 
 php artisan migrate --path=database/migrations/2025_03_08_171232_create_sales_voucher_table.php
 
+php artisan migrate --path=database/migrations/2014_10_12_100000_create_password_resets_table.php
+
 echo "Migration files completed!"

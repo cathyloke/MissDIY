@@ -19,6 +19,8 @@
                 <h3 class="detail-name">{{ $product->name }}</h3>
 
                 <h4 class="detail-price">${{ number_format($product->price, 2) }}</h4>
+
+                <h4 class="detail-stock">Available stock: {{$product->quantity}}</h4>
                 <!-- Note from RL: if want it to be ajax (no need reload every time), can use javascript function in the add to cart button to call fetch api -->
                 <form action="{{ route('cart.add', ['productId'=> $product->id]) }}" method="POST" class="add-to-cart-form">
                     @csrf

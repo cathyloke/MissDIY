@@ -85,8 +85,12 @@
     grid-row: 2;
 }
 
-.single-product .product-name-price-quantity .product-quantity{
+.single-product .product-name-price-quantity .available-stock{
     grid-row: 3;
+}
+
+.single-product .product-name-price-quantity .product-quantity{
+    grid-row: 4;
     justify-self: left;
     margin: 0;
     padding: 0;

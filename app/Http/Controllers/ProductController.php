@@ -69,7 +69,10 @@ class ProductController extends Controller
         //Store recently viewed products in a cookie if user is not login
         if (Auth::guest()) {
             $recent = explode(',', request()->cookie('recent_products', ''));
-            $recent = array_filter($recent, fn($recent_id) => $recent_id != $id);
+            $recent = array_filter($recent, function ($recent_id) use ($id) {
+                return $recent_id != $id;
+            });
+            
             $recent[] = $id;
             $recent = array_slice($recent, -3);
     

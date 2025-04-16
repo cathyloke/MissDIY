@@ -19,14 +19,13 @@
         <!-- Plain text for users, and href for admin to edit -->
         @can('isAdmin')
             <a href="{{ route('categories.index') }}">Category</a>
-        @endcan
-        @can('isCustomer')
+        @else
             <span class="font-semibold">Category</span>
         @endcan
 
         <span class="mx-2">>></span>
-        @if (isset($category) && $category)
-            <span class="font-semibold">{{ $category->name }}</span>
+        @if (isset($selectedCategory) && $selectedCategory)
+            <span class="font-semibold">{{ $selectedCategory->name }}</span>
         @else
             <span class="font-semibold">All Categories</span>
         @endif

@@ -18,7 +18,7 @@ class ProductController extends Controller
         
         $categories = Category::query();
 
-        $query = Product::query();
+        $query = Product::query()->where('categoryId', $categoryId);
 
         if (Gate::allows('isCustomer')) {
             $categories->whereNull('deleted_at');

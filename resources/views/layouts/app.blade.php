@@ -42,24 +42,23 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto topnav-right">
-                        @if (Auth::check())
-                            <a href="/home">Home</a>
-                            <div class="dropdown">
-                                <a href="{{ route('products.index') }}" class="dropbtn">
-                                    Products <i class="fa fa-caret-down"></i>
-                                </a>
-                                <div class="dropdown-content">
-                                    <a href="{{ route('products.index') }}">All Categories</a>
-                                    @foreach ($categories as $category)
-                                        <a href="{{ route('products.index', ['categoryId' => $category->id]) }}">{{ $category->name }}
-                                        </a>
-                                    @endforeach
-                                </div>
+                        <a href="/">Home</a>
+                        <div class="dropdown">
+                            <a href="{{ route('products.index') }}" class="dropbtn">
+                                Products <i class="fa fa-caret-down"></i>
+                            </a>
+                            <div class="dropdown-content">
+                                <a href="{{ route('products.index') }}">All Categories</a>
+                                @foreach ($categories as $category)
+                                    <a href="{{ route('products.index', ['categoryId' => $category->id]) }}">{{ $category->name }}
+                                    </a>
+                                @endforeach
                             </div>
-                            @if (Auth::user()->isCustomer())
-                                <a href="{{ route('cart.index') }}"><i class="fa-solid fa-cart-shopping"></i></a>
-                            @endif
+                        </div>
+                        @if (Auth::check() && Auth::user()->isCustomer())
+                            <a href="{{ route('cart.index') }}"><i class="fa-solid fa-cart-shopping"></i></a>
                         @endif
+
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))

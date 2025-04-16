@@ -22,7 +22,9 @@ use App\Http\Controllers\CategoryController;
 |
 */
 
+//Non login user routes
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
 Auth::routes();
 
@@ -31,9 +33,6 @@ Route::middleware(['auth'])->group(function () {
     // Home
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     
-    // Product
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -77,8 +76,8 @@ Route::middleware(['auth'])->group(function () {
         // Sales
         Route::put('/sale/{sale}/complete', [SalesController::class, 'markAsCompleted'])->name('sale.complete');
     });
-
-    Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-
 });
+
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
 

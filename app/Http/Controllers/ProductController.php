@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 
 
 class ProductController extends Controller
@@ -59,6 +60,18 @@ class ProductController extends Controller
 
         if (request()->expectsJson()) {
             return response()->json($product);
+        }
+
+        //Store recently viewed products in a cookie if user is not login
+        if (Auth::guest()) {
+            $recent = explode(',', request()->cookie('recent_products', ''));
+            $recent = array_filter($recent, fn($recent_id) => $recent_id != $id);
+            $recent[] = $id;
+            $recent = array_slice($recent, -3);
+    
+            return response()
+                ->view('products.show', compact('product'))
+                ->cookie('recent_products', implode(',', $recent), 60 * 24 * 7);
         }
 
         return view('products.show', compact('product'));
@@ -151,6 +164,4 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully!');
     }
-
-
 }

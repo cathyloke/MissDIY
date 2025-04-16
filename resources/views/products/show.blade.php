@@ -25,7 +25,7 @@
                 <form action="{{ route('cart.add', ['productId'=> $product->id]) }}" method="POST" class="add-to-cart-form">
                     @csrf
                 <!-- Note from RL: can add a validation for max quantity to add to cart -->
-                @can('isCustomer')   
+                @cannot('isAdmin')   
                     <div class="quantity-selector">
                         <label class="quantity-label">Quantity:</label>
                         <div class="quantity-controls">

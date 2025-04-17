@@ -163,11 +163,19 @@
 
         // discount code functionality
         let appliedDiscounts = [];
+        let originalSubtotal = 0;
 
-        $('#apply_discount').click(function() {
-            var discountCode = $('#discount_code').val().trim();
-            var subtotal = parseFloat($('#subtotal-amount').text()); // Retrieve the subtotal value from the HTML element
-        
+        $(document).ready(function () {
+            togglePaymentFields();
+            $('#payment_method').on('change', togglePaymentFields);
+
+            // initialize originalSubtotal on page load
+            originalSubtotal = parseFloat($('#subtotal-amount').text());
+        });
+
+        $('#apply_discount').click(function () {
+            let discountCode = $('#discount_code').val().trim();
+
             if (discountCode) {
                 if (appliedDiscounts.includes(discountCode.toUpperCase())) {
                     $('#discount_message').html('This code has already been applied.');
@@ -180,22 +188,31 @@
                     data: {
                         _token: '{{ csrf_token() }}',
                         discount_code: discountCode,
-                        subtotal: subtotal,
+                        subtotal: originalSubtotal, // always send original
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.success) {
-                            const discountAmount = parseFloat(response.discountAmount).toFixed(2);
-                            const discountedTotal = parseFloat(response.discountedTotal).toFixed(2);
+                            const discountAmount = parseFloat(response.discountAmount);
                             const upperCode = discountCode.toUpperCase();
                             appliedDiscounts.push(upperCode);
 
                             $('#applied_discounts_list').append(
-                                `<p class="applied-discount">Discount applied: RM ${discountAmount} (${upperCode})</p>`
+                                `<p class="applied-discount-message">Discount applied: -RM ${discountAmount.toFixed(2)} (${upperCode})</p>`
                             );
-                            
-                            $('#discounted_amount').html(parseFloat(response.discountedTotal).toFixed(2));
+
+                            // Sum all discounts from the applied discount messages
+                            let totalDiscount = 0;
+                            $('#applied_discounts_list .applied-discount-message').each(function () {
+                                const match = $(this).text().match(/RM ([\d.]+)/);
+                                if (match) {
+                                    totalDiscount += parseFloat(match[1]);
+                                }
+                            });
+
+                            const discountedTotal = originalSubtotal - totalDiscount;
+                            $('#discounted_amount').html(discountedTotal.toFixed(2));
                             $('#discounted_total').show();
-                            $('#subtotal-amount').html(parseFloat(response.discountedTotal).toFixed(2)); // update subtotal display
+
                         } else {
                             $('#discount_message').html('Invalid discount code.');
                             $('#discounted_total').hide();
@@ -203,12 +220,11 @@
 
                         $('#discount_code').val('');
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error('Error applying discount:', error);
                         $('#discount_code').val('');
                     }
                 });
-                console.log('Discount Code Sent:', discountCode);
 
             } else {
                 $('#discount_message').html('Please enter a discount code.');
@@ -219,7 +235,7 @@
         $('#payment-form').submit(function(e) {
             e.preventDefault();
 
-            $('.error-message').html(''); // Clear previous errors
+            $('.error-message').html(''); // clear previous errors
 
             let formData = $(this).serialize();
 
@@ -240,11 +256,6 @@
                     }
                 }
             });
-        });
-
-        $(document).ready(function() {
-            togglePaymentFields();
-            $('#payment_method').on('change', togglePaymentFields);
         });
     </script>
 

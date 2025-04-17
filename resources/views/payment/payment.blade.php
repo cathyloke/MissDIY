@@ -49,7 +49,7 @@
                     @endif
                 </div>
 
-                <p class="subtotal">Subtotal: RM {{ number_format($subtotal, 2) }}</p>
+                <p class="subtotal">Subtotal: RM <span id="subtotal-amount">{{ number_format($subtotal, 2) }}</span></p>
 
                 <!-- Discount Code Section -->
                 <div class="discount-section">
@@ -57,6 +57,10 @@
                     <input type="text" name="discount_code" id="discount_code" placeholder="Enter discount code"
                         value="{{ old('discount_code') }}">
                     <button type="button" id="apply_discount" class="apply-discount-btn">Apply</button>
+                    
+                    <!-- List of applied discounts -->
+                    <div id="applied_discounts_list"></div>
+
                     <p id="discount_message" class="discount-message"></p>
                     <p id="discounted_total" class="discounted-total" style="display:none;">Discounted Total: RM <span
                             id="discounted_amount"></span></p>
@@ -158,11 +162,18 @@
         }
 
         // discount code functionality
+        let appliedDiscounts = [];
+
         $('#apply_discount').click(function() {
             var discountCode = $('#discount_code').val().trim();
-            var subtotal = parseFloat("{{ $subtotal }}"); // Get the current subtotal from your controller
-
+            var subtotal = parseFloat($('#subtotal-amount').text()); // Retrieve the subtotal value from the HTML element
+        
             if (discountCode) {
+                if (appliedDiscounts.includes(discountCode.toUpperCase())) {
+                    $('#discount_message').html('This code has already been applied.');
+                    return;
+                }
+
                 $.ajax({
                     url: "{{ route('payment.apply_discount') }}",
                     type: 'POST',
@@ -173,18 +184,28 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            $('#discount_message').html('Discount applied: RM ' + parseFloat(response
-                                .discountAmount).toFixed(2));
-                            $('#discounted_amount').html(parseFloat(response.discountedTotal).toFixed(
-                                2));
+                            const discountAmount = parseFloat(response.discountAmount).toFixed(2);
+                            const discountedTotal = parseFloat(response.discountedTotal).toFixed(2);
+                            const upperCode = discountCode.toUpperCase();
+                            appliedDiscounts.push(upperCode);
+
+                            $('#applied_discounts_list').append(
+                                `<p class="applied-discount">Discount applied: RM ${discountAmount} (${upperCode})</p>`
+                            );
+                            
+                            $('#discounted_amount').html(parseFloat(response.discountedTotal).toFixed(2));
                             $('#discounted_total').show();
+                            $('#subtotal-amount').html(parseFloat(response.discountedTotal).toFixed(2)); // update subtotal display
                         } else {
                             $('#discount_message').html('Invalid discount code.');
                             $('#discounted_total').hide();
                         }
+
+                        $('#discount_code').val('');
                     },
                     error: function(xhr, status, error) {
                         console.error('Error applying discount:', error);
+                        $('#discount_code').val('');
                     }
                 });
                 console.log('Discount Code Sent:', discountCode);

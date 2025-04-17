@@ -11,6 +11,8 @@ use App\Models\Sale;
 use App\Models\Product;
 use App\Models\Voucher;
 use App\Models\SaleDetail;
+use Illuminate\Support\Facades\Log;
+
 class PaymentController extends Controller
 {
     public function __construct()
@@ -38,6 +40,7 @@ class PaymentController extends Controller
         });
 
         session(['subtotal' => $subtotal]); // update subtotal in session
+        session()->put('total_discount', 0);
 
         $user = User::find($userId);
         $userAddress = $user->address;
@@ -124,15 +127,15 @@ class PaymentController extends Controller
     {
         $discountCode = $request->input('discount_code');
         $subtotal = (float) $request->input('subtotal');
-
+    
         $voucher = Voucher::where('code', $discountCode)
                         ->where('expiration_date', '>', now())
                         ->where('validity', 'active')
                         ->first();
-        
+    
         if ($voucher) {
             $discountAmount = 0;
-
+    
             if ($voucher->type === 'percentage') {
                 $discountAmount = ($voucher->discount / 100) * $subtotal;
             } elseif ($voucher->type === 'fixed') {
@@ -142,12 +145,21 @@ class PaymentController extends Controller
                     $discountAmount = min($voucher->discount, $subtotal); // ensure discount doesn't exceed subtotal
                 }
             }
-
-            $discountedTotal = $subtotal - $discountAmount;
+    
+            // Get the current total discount from the session
+            $totalDiscount = session()->get('total_discount', 0);
+    
+            // Update the total discount and discounted subtotal
+            $totalDiscount += $discountAmount;
+            $discountedSubtotal = $subtotal - $discountAmount;
+    
+            // Store the updated total discount in the session
+            session()->put('total_discount', $totalDiscount);
+    
             return response()->json([
                 'success' => true,
                 'discountAmount' => (float) $discountAmount,
-                'discountedTotal' => (float) $discountedTotal,
+                'discountedTotal' => (float) $discountedSubtotal,
             ]);
         }
         return response()->json(['success' => false]);

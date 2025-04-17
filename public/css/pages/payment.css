@@ -142,3 +142,16 @@ label {
    font-size: 0.9rem;
    margin-bottom: 10px;
 }
+
+.qr-container {
+   margin: 20px auto;
+   text-align: center;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.qr-code {
+   height: 100px;
+   width: 100px;
+}

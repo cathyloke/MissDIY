@@ -135,7 +135,9 @@
 
                         {{-- Touch n Go --}}
                         <div id="touch-n-go-fields" style="display:none;">
-                            <!-- No fields for Touch n Go -->
+                            <div class="qr-container">
+                                <img src="{{ asset('images/TNG_QR.png') }}" class="qr-code" alt="Touch n Go QR code">
+                            </div>
                         </div>
 
                         <button type="submit" class="payment-btn">Proceed to Pay</button>

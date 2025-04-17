@@ -202,11 +202,11 @@
 
             $.ajax({
                 type: 'POST',
-                url: '{{ route('payment.process') }}',
+                url: "{{ route('payment.process') }}",
                 data: formData,
                 success: function(response) {
                     alert(response.message);
-                    window.location.href = '{{ route('home') }}';
+                    window.location.href = "{{ route('home') }}";
                 },
                 error: function(xhr) {
                     if (xhr.status === 422) {

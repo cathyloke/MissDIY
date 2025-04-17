@@ -14,7 +14,6 @@ class CartController extends Controller
     function index()
     {
         $userId = Auth::id();
-        // $userId = DB::table('users')->where('name', 'Cathy')->value('id');
 
         $cartItems = Cart::where('userId', $userId)->get();
 

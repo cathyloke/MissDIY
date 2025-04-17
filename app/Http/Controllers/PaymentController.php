@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\Sale;
+use App\Models\Product;
 use App\Models\Voucher;
-
+use App\Models\SaleDetail;
 class PaymentController extends Controller
 {
     public function __construct()
@@ -91,6 +93,25 @@ class PaymentController extends Controller
                 return response()->json(['errors' => ['payment_method' => ['Invalid payment method']]], 422);
         }
 
+        $sale = Sale::where('userId', Auth::id())->latest->first();
+        if (!$sale) {
+            return response()->json(['errors' => ['sale' => ['No sale record found for the user']]], 404);
+        }
+
+        $saleDetails = SaleDetail::where('salesId', $sale->id)->get();
+
+        foreach ($saleDetails as $detail) {
+            $product = Product::withTrashed() ->find($detail->productId);
+
+            if ($product) {
+                $product->quantity -= $detail->quantity;
+                if ($product->quantity < 0) {
+                    $product->quantity = 0;
+                }
+                $product->save();
+            }
+        }
+
         Cart::where('userId', Auth::id())->delete();
 
         return response()->json([
@@ -115,7 +136,11 @@ class PaymentController extends Controller
             if ($voucher->type === 'percentage') {
                 $discountAmount = ($voucher->discount / 100) * $subtotal;
             } elseif ($voucher->type === 'fixed') {
-                $discountAmount = min($voucher->discount, $subtotal); // ensure discount doesn't exceed subtotal
+                if ($voucher->discount > $subtotal) {
+                    return response()->json(['success' => false]);
+                } else {
+                    $discountAmount = min($voucher->discount, $subtotal); // ensure discount doesn't exceed subtotal
+                }
             }
 
             $discountedTotal = $subtotal - $discountAmount;

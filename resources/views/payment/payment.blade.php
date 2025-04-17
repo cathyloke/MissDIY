@@ -218,11 +218,11 @@
                             $('#discounted_total').hide();
                         }
 
-                        $('#discount_code').val('');
+                        // $('#discount_code').val('');
                     },
                     error: function (xhr, status, error) {
                         console.error('Error applying discount:', error);
-                        $('#discount_code').val('');
+                        // $('#discount_code').val('');
                     }
                 });
 
@@ -237,7 +237,13 @@
 
             $('.error-message').html(''); // clear previous errors
 
-            let formData = $(this).serialize();
+            // let discountCode = $('#discount_code').val().trim();
+            // alert(discountCode);
+
+            let selectedItems = @json($selectedItems->pluck('id')); // This will output an array of selected item IDs from PHP
+            let formData = $(this).serialize() + '&selected_items=' + JSON.stringify(selectedItems) + '&discounted_total=' + $('#discounted_amount').text() + '&discount_code=' + $('#discount_code').val().trim();
+            // let formData = $(this).serialize();
+            alert(formData);
 
             $.ajax({
                 type: 'POST',
@@ -249,6 +255,11 @@
                 },
                 error: function(xhr) {
                     if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        for (let field in errors) {
+                            $('#' + field + '_error').html(errors[field][0]);
+                        }
+                    } else if (xhr.status === 404) {
                         let errors = xhr.responseJSON.errors;
                         for (let field in errors) {
                             $('#' + field + '_error').html(errors[field][0]);

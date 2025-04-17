@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Sale extends Model
 {
@@ -17,7 +18,16 @@ class Sale extends Model
     protected $casts = [
         'userId' => 'integer',
     ];
-    
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($sale) {
+            $sale->id = Str::random(13);
+        });
+    }
+
     protected $fillable = [
         'id',
         'date',

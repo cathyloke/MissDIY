@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Home
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -41,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
     // Sales
     Route::get('/profile/orders', [ProfileController::class, 'orders'])->name('profile.orders');
 
-    Route::middleware(['admin'])->group(function(){
+    Route::middleware(['admin'])->group(function () {
         // CUD products
         Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
         Route::post('/products', [ProductController::class, 'store'])->name('products.store');
@@ -61,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/sale/{sale}/delivering', [SalesController::class, 'markAsDelivering'])->name('sale.delivering');
     });
 
-    Route::middleware(['customer'])->group(function(){
+    Route::middleware(['customer'])->group(function () {
         // Cart
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
         Route::post('/cart/add/{productId}', [CartController::class, 'addToCart'])->name('cart.add');
@@ -79,5 +79,3 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-
-

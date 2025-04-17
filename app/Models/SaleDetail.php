@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class SaleDetail extends Model
 {
@@ -17,6 +18,16 @@ class SaleDetail extends Model
         'salesId',
         'userId',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($saleDetails) {
+            $saleDetails->id = Str::random(13);
+        });
+    }
+
 
     public function product()
     {

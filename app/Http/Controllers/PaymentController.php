@@ -34,10 +34,10 @@ class PaymentController extends Controller
 
         // fetch only selected cart items for current user
         $selectedItems = Cart::where('userId', $userId)
-                            ->whereIn('id', $selectedProductIds) // filter by selected product IDs
-                            ->get();
-        
-        $subtotal = $selectedItems->sum(function($item) {
+            ->whereIn('id', $selectedProductIds) // filter by selected product IDs
+            ->get();
+
+        $subtotal = $selectedItems->sum(function ($item) {
             return $item->product->price * $item->quantity;
         });
 
@@ -52,135 +52,166 @@ class PaymentController extends Controller
 
     public function process(Request $request)
     {
-        Log::info($request->all());
 
-        // Validate payment method first
-        $validator = Validator::make($request->only('payment_method'), [
-            'payment_method' => 'required|in:touch_n_go,card,online_banking',
+        $validator = Validator::make($request->all(), [
+            'payment_method' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Store applied vouchers
-        $appliedVouchers = json_decode($request->input('applied_vouchers', '[]'), true);
-        session()->put('applied_vouchers', $appliedVouchers);
-
-        // Conditional validation based on payment method
+        $paymentType = '';
         switch ($request->payment_method) {
             case 'touch_n_go':
-                // No extra validation
+                $paymentType = 'Touch n Go eWallet';
                 break;
 
             case 'card':
-                $cardValidator = Validator::make($request->only([
-                    'card_number',
-                    'cardholder_name',
-                    'expiry_date',
-                    'cvv'
-                ]), [
+                $validator = Validator::make($request->all(), [
                     'card_number' => 'required|numeric',
                     'cardholder_name' => 'required|string|min:3|max:255',
                     'expiry_date' => 'required|date_format:m/y',
                     'cvv' => 'required|digits:3|numeric',
                 ]);
 
-                if ($cardValidator->fails()) {
-                    return response()->json(['errors' => $cardValidator->errors()], 422);
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
                 }
+
+                $paymentType = 'Credit/Debit Card';
                 break;
 
             case 'online_banking':
-                $bankValidator = Validator::make($request->only([
-                    'bank_name',
-                    'account_number'
-                ]), [
+                $validator = Validator::make($request->all(), [
                     'bank_name' => 'required|string',
                     'account_number' => 'required|string|min:10',
                 ]);
 
-                if ($bankValidator->fails()) {
-                    return response()->json(['errors' => $bankValidator->errors()], 422);
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
                 }
+
+                $paymentType = 'Online Banking';
                 break;
+
+            default:
+                return response()->json(['errors' => ['payment_method' => ['Invalid payment method']]], 422);
         }
 
-        // Process payment and create sale
+        //after payment type validation, should add the sales, sales details and salesvoucher
+        /**
+         * check the validity of voucher
+         * add sales, salesdetails and sales voucher
+         * deduct stock in product
+         */
+
+         //huihui fixed here
+        $discount_code = $request->discount_code;
+
+        if (empty($discount_code)) {
+            return response()->json(['error' => 'ASDASDASDASDASDASD.'], 404);
+        }
+
+        $voucher = Voucher::where('code', $discount_code)
+            ->where('validity', 'active')
+            ->first();
+
+        if (!$voucher) {
+            return response()->json(['error' => 'Voucher is inactive.'], 404);
+        }
+
         $userId = Auth::id();
-        $cartItems = Cart::with('product')->where('userId', $userId)->get();
-        $subtotal = session('subtotal', 0);
-        $totalDiscount = session('total_discount', 0);
-        $netTotal = $subtotal - $totalDiscount;
+        $selectedItems = json_decode($request->selected_items);
+        $discountedTotal = $request->discounted_total;
 
-        DB::beginTransaction();
-        try {
-            $sale = new Sale();
-            $sale->date = now();
-            $sale->totalAmount = $subtotal;
-            $sale->netTotalAmount = $netTotal;
-            $sale->status = 'completed';
-            $sale->userId = $userId;
-            $sale->save();
-
-            foreach ($cartItems as $item) {
-                SaleDetail::create([
-                    'quantity' => $item->quantity,
-                    'productId' => $item->product->id,
-                    'salesId' => $sale->id,
-                    'userId' => $userId,
-                ]);
-
-                $product = Product::find($item->product->id);
-                if ($product) {
-                    $product->quantity = max(0, $product->quantity - $item->quantity);
-                    $product->save();
-                }
-            }
-
-            foreach ($appliedVouchers as $code) {
-                $voucher = Voucher::where('code', $code)->first();
-                if ($voucher) {
-                    SaleVoucher::create([
-                        'salesId' => $sale->id,
-                        'voucherId' => $voucher->id,
-                    ]);
-                }
-            }
-
-            Cart::where('userId', $userId)->delete();
-            session()->forget(['subtotal', 'total_discount', 'applied_vouchers']);
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Payment successful! Your order has been placed.',
-            ]);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Checkout error: ' . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred during checkout: ' . $e->getMessage(),
-            ], 500);
+        if (empty($selectedItems)) {
+            return response()->json(['errors' => ['cart' => ['No selected items found in selected cart']]], 404);
         }
+
+
+        $selectedCartItems = [];
+        foreach ($selectedItems as $item) {
+            $cart = Cart::find($item);          //quantity
+            $product = Product::find($cart->productId);             //product - price and productid
+            $selectedCartItems[] = [
+                'quantity' => $cart->quantity,
+                'productPrice' => $product->price,
+                'productId' => $product->id,
+            ];
+        }
+
+        $totalAmount = collect($selectedCartItems)->sum(function ($item) {
+            return $item['productPrice'] * $item['quantity'];
+        });
+
+        if ($discountedTotal === null) {
+            $discountedTotal = $totalAmount;
+        }
+
+        $sale = Sale::create([
+            'date' => now(),
+            'totalAmount' => $totalAmount,
+            'netTotalAmount' => $discountedTotal,
+            'status' => 'pending',
+            'userId' => $userId,
+        ]);
+
+        foreach ($selectedCartItems as $item) {
+            SaleDetail::create([
+                'quantity' => $item['quantity'],
+                'productId' => $item['productId'],
+                'salesId' => $sale->id,
+                'userId' => $userId,
+            ]);
+
+            $product = Product::find($item['productId']);
+            if ($product) {
+                $product->quantity -= $item['quantity'];
+                $product->save();
+            }
+
+            Cart::where('userId', $userId)
+                ->where('productId', $item['productId'])
+                ->delete();
+        }
+
+        if ($request->filled('discount_code')) {
+            if ($voucher) {
+                SaleVoucher::create([
+                    'salesId' => $sale->id,
+                    'voucherId' => $voucher->id,
+                ]);
+            }
+        }
+
+
+        Log::info($voucher);
+
+        $vouchers = Voucher::all();
+
+        Log::info($vouchers);
+
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Payment successful! Your order has been placed.',
+        ]);
     }
 
     public function applyDiscount(Request $request)
     {
         $discountCode = $request->input('discount_code');
         $subtotal = (float) $request->input('subtotal');
-    
+
         $voucher = Voucher::where('code', $discountCode)
-                        ->where('expiration_date', '>', now())
-                        ->where('validity', 'active')
-                        ->first();
-    
+            ->where('expiration_date', '>', now())
+            ->where('validity', 'active')
+            ->first();
+
         if ($voucher) {
             $discountAmount = 0;
-    
+
             if ($voucher->type === 'percentage') {
                 $discountAmount = ($voucher->discount / 100) * $subtotal;
             } elseif ($voucher->type === 'fixed') {
@@ -190,17 +221,17 @@ class PaymentController extends Controller
                     $discountAmount = min($voucher->discount, $subtotal); // ensure discount doesn't exceed subtotal
                 }
             }
-    
+
             // Get the current total discount from the session
             $totalDiscount = session()->get('total_discount', 0);
-    
+
             // Update the total discount and discounted subtotal
             $totalDiscount += $discountAmount;
             $discountedSubtotal = $subtotal - $discountAmount;
-    
+
             // Store the updated total discount in the session
             session()->put('total_discount', $totalDiscount);
-    
+
             return response()->json([
                 'success' => true,
                 'discountAmount' => (float) $discountAmount,

@@ -11,6 +11,13 @@ class SaleDetail extends Model
 
     protected $table = 'sales_details';
 
+    protected $fillable = [
+        'quantity',
+        'productId',
+        'salesId',
+        'userId',
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'productId', 'id');

@@ -24,7 +24,7 @@ class ProductController extends Controller
             $query = Product::query();
         }
 
-        if (Gate::allows('isCustomer')) {
+        if (Gate::allows('isCustomer') || Auth::guest()) {
             $categories->whereNull('deleted_at');
             $query->whereNull('deleted_at');
         

@@ -239,7 +239,6 @@
                             + '&selected_items=' + JSON.stringify(selectedItems) 
                             + '&discounted_total=' + $('#discounted_amount').text() 
                             + '&discount_code=' + JSON.stringify(appliedDiscounts);
-            alert(formData);
 
             $.ajax({
                 type: 'POST',

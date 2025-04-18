@@ -178,7 +178,9 @@ function updateSubtotal(){
 function selectAll(source) {
     const checkboxes = document.querySelectorAll('.selected-product');
     for (var i = 0, n = checkboxes.length; i < n; i++) {
-        checkboxes[i].checked = source.checked;
+        if (!checkboxes[i].disabled) {
+            checkboxes[i].checked = source.checked;
+        }
     }
     updateSubtotal(); // Call the updateSubtotal function
 }

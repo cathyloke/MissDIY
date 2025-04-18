@@ -45,6 +45,14 @@
     margin: 20px;
 }
 
+.single-product.unavailable {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
 .single-product .checkbox{
     grid-column: 1;
     display: flex;

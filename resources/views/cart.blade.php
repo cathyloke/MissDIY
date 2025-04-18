@@ -27,7 +27,8 @@
                 <div class="single-product {{ $cartItem->product->trashed() || $cartItem->product->quantity <= 0 ? 'unavailable' : '' }}"
                     data-id="{{ $cartItem->id }}">
                     <div class="checkbox">
-                        <input type="checkbox" class="selected-product" value="{{ $cartItem->id }}">
+                        <input type="checkbox" class="selected-product" value="{{ $cartItem->id }}"
+                            {{ $cartItem->product->quantity <= 0 ? 'disabled' : '' }}>
                         <button type="submit" class="remove-icon" onclick="removeProduct('{{ $cartItem->id }}')">
                             <i class="fa-solid fa-trash"></i>
                         </button>

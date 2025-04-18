@@ -92,10 +92,6 @@ class PaymentController extends Controller
 
         $discount_codes = json_decode($request->discount_code);
 
-        if (empty($discount_codes)) {
-            return response()->json(['error' => 'No voucher(s) found.'], 404);
-        }
-
         // validate all vouchers
         $vouchers = Voucher::whereIn('code', $discount_codes)
             ->where('validity', 'active')

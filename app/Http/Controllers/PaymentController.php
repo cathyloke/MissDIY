@@ -12,8 +12,6 @@ use App\Models\Product;
 use App\Models\Voucher;
 use App\Models\SaleDetail;
 use App\Models\SaleVoucher;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -52,7 +50,6 @@ class PaymentController extends Controller
 
     public function process(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'payment_method' => 'required',
         ]);
@@ -61,10 +58,8 @@ class PaymentController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $paymentType = '';
         switch ($request->payment_method) {
             case 'touch_n_go':
-                $paymentType = 'Touch n Go eWallet';
                 break;
 
             case 'card':
@@ -78,8 +73,6 @@ class PaymentController extends Controller
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 422);
                 }
-
-                $paymentType = 'Credit/Debit Card';
                 break;
 
             case 'online_banking':
@@ -91,34 +84,25 @@ class PaymentController extends Controller
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 422);
                 }
-
-                $paymentType = 'Online Banking';
                 break;
 
             default:
                 return response()->json(['errors' => ['payment_method' => ['Invalid payment method']]], 422);
         }
 
-        //after payment type validation, should add the sales, sales details and salesvoucher
-        /**
-         * check the validity of voucher
-         * add sales, salesdetails and sales voucher
-         * deduct stock in product
-         */
+        $discount_codes = json_decode($request->discount_code);
 
-         //huihui fixed here
-        $discount_code = $request->discount_code;
-
-        if (empty($discount_code)) {
-            return response()->json(['error' => 'ASDASDASDASDASDASD.'], 404);
+        if (empty($discount_codes)) {
+            return response()->json(['error' => 'No voucher(s) found.'], 404);
         }
 
-        $voucher = Voucher::where('code', $discount_code)
+        // validate all vouchers
+        $vouchers = Voucher::whereIn('code', $discount_codes)
             ->where('validity', 'active')
-            ->first();
+            ->get();
 
-        if (!$voucher) {
-            return response()->json(['error' => 'Voucher is inactive.'], 404);
+        if ($vouchers->count() !== count($discount_codes)) {
+            return response()->json(['error' => 'One or more vouchers are inactive or invalid.'], 404);
         }
 
         $userId = Auth::id();
@@ -129,11 +113,10 @@ class PaymentController extends Controller
             return response()->json(['errors' => ['cart' => ['No selected items found in selected cart']]], 404);
         }
 
-
         $selectedCartItems = [];
         foreach ($selectedItems as $item) {
-            $cart = Cart::find($item);          //quantity
-            $product = Product::find($cart->productId);             //product - price and productid
+            $cart = Cart::find($item); // quantity
+            $product = Product::find($cart->productId); //product - price and productid
             $selectedCartItems[] = [
                 'quantity' => $cart->quantity,
                 'productPrice' => $product->price,
@@ -176,7 +159,7 @@ class PaymentController extends Controller
                 ->delete();
         }
 
-        if ($request->filled('discount_code')) {
+        foreach ($vouchers as $voucher) {
             if ($voucher) {
                 SaleVoucher::create([
                     'salesId' => $sale->id,
@@ -184,14 +167,6 @@ class PaymentController extends Controller
                 ]);
             }
         }
-
-
-        Log::info($voucher);
-
-        $vouchers = Voucher::all();
-
-        Log::info($vouchers);
-
 
         return response()->json([
             'success' => true,
@@ -222,14 +197,14 @@ class PaymentController extends Controller
                 }
             }
 
-            // Get the current total discount from the session
+            // get current total discount from session
             $totalDiscount = session()->get('total_discount', 0);
 
-            // Update the total discount and discounted subtotal
+            // update total discount and discounted subtotal
             $totalDiscount += $discountAmount;
             $discountedSubtotal = $subtotal - $discountAmount;
 
-            // Store the updated total discount in the session
+            // store updated total discount in session
             session()->put('total_discount', $totalDiscount);
 
             return response()->json([

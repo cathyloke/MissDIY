@@ -200,7 +200,7 @@
                                 `<p class="applied-discount-message">Discount applied: -RM ${discountAmount.toFixed(2)} (${upperCode})</p>`
                             );
 
-                            // Sum all discounts from the applied discount messages
+                            // sum all discounts from the applied discount messages
                             let totalDiscount = 0;
                             $('#applied_discounts_list .applied-discount-message').each(function () {
                                 const match = $(this).text().match(/RM ([\d.]+)/);
@@ -217,12 +217,9 @@
                             $('#discount_message').html('Invalid discount code.');
                             $('#discounted_total').hide();
                         }
-
-                        // $('#discount_code').val('');
                     },
                     error: function (xhr, status, error) {
                         console.error('Error applying discount:', error);
-                        // $('#discount_code').val('');
                     }
                 });
 
@@ -237,12 +234,11 @@
 
             $('.error-message').html(''); // clear previous errors
 
-            // let discountCode = $('#discount_code').val().trim();
-            // alert(discountCode);
-
-            let selectedItems = @json($selectedItems->pluck('id')); // This will output an array of selected item IDs from PHP
-            let formData = $(this).serialize() + '&selected_items=' + JSON.stringify(selectedItems) + '&discounted_total=' + $('#discounted_amount').text() + '&discount_code=' + $('#discount_code').val().trim();
-            // let formData = $(this).serialize();
+            let selectedItems = @json($selectedItems->pluck('id')); // outputs an array of selected item IDs from PHP
+            let formData = $(this).serialize() 
+                            + '&selected_items=' + JSON.stringify(selectedItems) 
+                            + '&discounted_total=' + $('#discounted_amount').text() 
+                            + '&discount_code=' + JSON.stringify(appliedDiscounts);
             alert(formData);
 
             $.ajax({
@@ -269,7 +265,5 @@
             });
         });
     </script>
-
 </body>
-
 </html>

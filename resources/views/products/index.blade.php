@@ -7,6 +7,8 @@
     <title>Products List</title>
     <link rel="stylesheet" href="{{ asset('css/pages/product.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/app2.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <script src="https://kit.fontawesome.com/25b5310acf.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -102,8 +104,9 @@
     <!-- Add to cart toast message-->
     <!-- success -->
     @if (session('success'))
-        <div id="successToast" class="toast position-fixed top-0 start-50 translate-middle-x" style="z-index: 1000; margin-top: 50px;" role="alert" aria-live="assertive"
-            aria-atomic="true" data-bs-autohide="true" data-bs-delay="2000">
+        <div id="successToast" class="toast position-fixed top-0 start-50 translate-middle-x"
+            style="z-index: 1000; margin-top: 50px;" role="alert" aria-live="assertive" aria-atomic="true"
+            data-bs-autohide="true" data-bs-delay="2000">
             <div class="toast-body">
                 {{ session('success') }}
             </div>
@@ -111,14 +114,16 @@
     @endif
     <!-- quantity error -->
     @if (session('error'))
-    <div id="errorToast" class="toast position-fixed top-0 start-50 translate-middle-x" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 1000; margin-top: 50px; background-color:#FFD1DC;">
-        <div class="d-flex">
-            <div class="toast-body">
-                {{ session('error') }}
+        <div id="errorToast" class="toast position-fixed top-0 start-50 translate-middle-x" role="alert"
+            aria-live="assertive" aria-atomic="true" style="z-index: 1000; margin-top: 50px; background-color:#FFD1DC;">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ session('error') }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-    </div>
     @endif
 
     <script>

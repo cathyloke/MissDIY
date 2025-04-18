@@ -73,26 +73,17 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    <i class="fa-solid fa-user"></i>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end dropdown-content"
-                                    aria-labelledby="navbarDropdown">
-                                    <a class="nav-link" href="{{ route('profile.show') }}">
-                                        {{ __('My Profile') }}
-                                    </a>
-                                    <a class="nav-link" href="{{ route('profile.orders') }}">
-                                        {{ __('My Orders') }}
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="nav-link" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
+                            <li class="topnav-right">
+                                <div class="dropdown">
+                                    <a class="dropbtn">{{ Auth::user()->name }} <i class="fa-solid fa-user"></i></a>
+                                    <div class="dropdown-content">
+                                        <a href="{{ route('profile.show') }}">My Profile</a>
+                                        <a href="{{ route('profile.orders') }}">My Orders</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">Logout</a>
+                                    </div>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>

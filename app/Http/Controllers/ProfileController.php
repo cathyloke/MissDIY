@@ -58,3 +58,4 @@ class ProfileController extends Controller
         return view('profile.orders', compact('pendingOrders', 'deliveringOrders', 'completedOrders'));
     }
 }
+

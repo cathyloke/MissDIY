@@ -9,7 +9,7 @@
             <h3 class="header-title">Category List</h3>
             <h4 class="section-title">Edit the category here</h4>
         </div>
-        <a href="{{ route('categories.create') }}" class="btn btn-restore">
+        <a href="{{ route('categories.create') }}" class="custom-restore-btn">
             <i class="fas fa-plus mr-1"></i> Create Category
         </a>
     </div>
@@ -38,18 +38,18 @@
                         <form action="{{ route('categories.restore', $category->id) }}" method="POST" class="inline">
                             @csrf
                             @method('PATCH')
-                            <button type="submit" class="btn btn-restore">
+                            <button type="submit" class="custom-restore-btn">
                                 <i class="fas fa-undo mr-1"></i> Restore
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-edit">
+                        <a href="{{ route('categories.edit', $category->id) }}" class="custom-btn-edit">
                             <i class="fas fa-edit mr-1"></i> Edit
                         </a>
                         <form action="{{ route('categories.deactivate', $category->id) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-deactivate"
+                            <button type="submit" class="custom-deactivate-btn"
                                 onclick="return confirm('Deactivate this category?')">
                                 <i class="fas fa-ban mr-1"></i> Deactivate
                             </button>

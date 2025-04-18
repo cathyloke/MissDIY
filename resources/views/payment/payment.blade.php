@@ -215,10 +215,13 @@
                             });
 
                             const discountedTotal = originalSubtotal - totalDiscount;
+                            $('#discount_message').html('');
                             $('#discounted_amount').html(discountedTotal.toFixed(2));
                             $('#discounted_total').show();
 
                         } else {
+                            $('#applied_discounts_list').html('');
+                            $('#discount_message').html('');
                             $('#discount_message').html('Invalid discount code.');
                             $('#discounted_total').hide();
                         }
@@ -229,6 +232,8 @@
                 });
 
             } else {
+                $('#applied_discounts_list').html('');
+                $('#discount_message').html('');
                 $('#discount_message').html('Please enter a discount code.');
                 $('#discounted_total').hide();
             }

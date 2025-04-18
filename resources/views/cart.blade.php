@@ -1,9 +1,8 @@
 @extends('layouts.app')
+<link rel="stylesheet" href="{{ asset('css/pages/cart.css') }}" />
+<script src="{{ asset('js/pages/cart.js') }}"></script>
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/pages/cart.css') }}" />
-    <script src="{{ asset('js/pages/cart.js') }}"></script>
-
     @if (session('error'))
         <p class="error-message">{{ session('error') }}</p>
     @endif
@@ -41,8 +40,8 @@
                         <div class="product-name">{{ $cartItem->product->name }} </div>
                         <div class="product-price">RM <span
                                 class="price">{{ number_format($cartItem->product->price, 2) }}</span></div>
-                                
-                        <div class="available-stock">Available stock: <span>{{$cartItem->product->quantity}}</span></div>
+
+                        <div class="available-stock">Available stock: <span>{{ $cartItem->product->quantity }}</span></div>
                         @if ($cartItem->product->trashed() || $cartItem->product->quantity <= 0)
                             <p class="unavailable-message">This product is unavailable.</p>
                         @else

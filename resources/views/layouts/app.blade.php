@@ -75,13 +75,11 @@
                         @else
                             <li class="topnav-right">
                                 <div class="dropdown">
-                                    <a class="dropbtn">{{ Auth::user()->name }} <i class="fa-solid fa-user"></i></a>
-                                    <div class="dropdown-content">
+                                    <a class="dropbtn">{{Auth::user()->name}} <i class="fa-solid fa-user"></i></a>
+                                    <div class="dropdown-content" style="min-width: 130px;">
                                         <a href="{{ route('profile.show') }}">My Profile</a>
                                         <a href="{{ route('profile.orders') }}">My Orders</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
+                                        <a href="{{ route('logout') }}" onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">Logout</a>
                                     </div>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

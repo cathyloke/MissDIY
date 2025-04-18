@@ -144,7 +144,12 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="payment-btn">Proceed to Pay</button>
+                        @if (!$userAddress)
+                            <button type="button" class="payment-btn" disabled title="Please add a shipping address to proceed.">Proceed to Pay</button>
+                            <p class="error-message" style="color:red;">Please add a shipping address to proceed.</p>
+                        @else
+                            <button type="submit" class="payment-btn">Proceed to Pay</button>
+                        @endif
                     </div>
                 </form>
             </div>

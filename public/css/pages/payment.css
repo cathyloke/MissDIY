@@ -84,6 +84,11 @@ section {
    background-color: #45a049;
 }
 
+.payment-btn:disabled {
+   background-color: #ccc;
+   cursor: not-allowed;
+}
+
 .user-address {
    padding: 15px;
    border: 1px solid #ccc;

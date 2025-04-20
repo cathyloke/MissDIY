@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Cathy',
                 'email' => 'cathy@gmail.com',
-                'password' => Hash::make('cus123'),
+                'password' => Hash::make('cathy123'),
                 'address' => '345 Customer Road',
                 'gender' => 'female',
                 'type' => 'customer',
@@ -53,7 +53,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Shirley',
                 'email' => 'shirley@gmail.com',
-                'password' => Hash::make('cus123'),
+                'password' => Hash::make('shirley123'),
                 'address' => '345 Customer Road',
                 'gender' => 'female',
                 'type' => 'customer',
@@ -64,7 +64,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Joely',
                 'email' => 'joely@gmail.com',
-                'password' => Hash::make('cus123'),
+                'password' => Hash::make('joely123'),
                 'address' => '345 Customer Road',
                 'gender' => 'female',
                 'type' => 'customer',
@@ -75,7 +75,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'lsq',
                 'email' => 'lsq@gmail.com',
-                'password' => Hash::make('cus123'),
+                'password' => Hash::make('siqing123'),
                 'address' => '345 Customer Road',
                 'gender' => 'female',
                 'type' => 'customer',

@@ -1,0 +1,30 @@
+.panel-group {
+    max-width: 700px;
+    margin: 2rem auto;
+    font-family: sans-serif;
+}
+
+.panel {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.panel-header {
+    background-color: #f1f1f1;
+    padding: 12px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+
+.panel-content {
+    display: none;
+    padding: 15px 20px;
+    background-color: #fff;
+}
+
+.panel.active .panel-content {
+    display: block;
+}

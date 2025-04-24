@@ -1,0 +1,223 @@
+.empty-cart {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #f9f9f9;
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 60px auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.empty-cart h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.empty-cart p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.empty-cart a {
+    color: #5098e6;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.empty-cart a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.cart{
+    padding-bottom: 150px;
+}
+.single-product{
+    display: grid;
+    grid-template-columns: auto 1fr 3fr auto;
+    grid-template-rows: 200px;
+    align-items: center;
+    border: 1px solid black;
+    margin: 20px;
+}
+
+.single-product.unavailable {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
+.single-product .checkbox{
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.single-product .checkbox .remove-icon{
+    background-color: transparent;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.single-product .product-image{
+    grid-column: 2;
+}
+
+.single-product .product-image img{
+    width: 150px;
+    height: 150px;
+}
+
+.single-product .product-name-price-quantity{
+    grid-column: 3;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    align-items: start;
+    margin: 10px;
+}
+
+.single-product .product-name-price-quantity .product-name{
+    grid-row: 1;
+}
+
+.single-product .product-name-price-quantity .product-price{
+    grid-row: 2;
+}
+
+.single-product .product-name-price-quantity .available-stock{
+    grid-row: 3;
+}
+
+.single-product .product-name-price-quantity .product-quantity{
+    grid-row: 4;
+    justify-self: left;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.single-product .product-name-price-quantity .product-quantity input{
+    width: 50px;
+    padding: 5px 15px;
+    text-align: center;
+    font-size: 15px;
+    border: 1px solid rgb(154, 152, 152);
+    color:rgb(0, 0, 0);
+}
+
+.single-product .product-name-price-quantity .product-quantity button{
+    margin: 0;
+    padding: 5px 10px;
+    color: rgb(0, 0, 0);
+    border: 1px solid rgb(154, 152, 152);
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.single-product .total-price{
+    grid-column: 4;
+    padding-top: 90px; 
+    margin-right: 5px;
+    text-align: center;
+}
+
+.fixed-bottom-bar{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    background-color: #e5e9f1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.voucher{
+    display: flex;
+    flex-direction: column;
+}
+
+.apply-voucher{
+    width: 80%;
+    margin: 20px auto;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.apply-voucher input{
+    width: 200px;
+    padding: 8px;
+    margin-left: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.apply-voucher button{
+    padding: 8px 12px;
+    border: none;
+    background: #292722;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.apply-voucher button:hover{
+    background: #ddd;
+    color:#000000
+}
+
+#voucher-message{
+    font-size: 14px;
+    font-weight: bold;
+    color: #075f1c;
+    width: 80%;
+    margin: 0px auto;
+    padding-right: 100px;
+    text-align: center;
+}
+
+.subtotal-checkout{
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0px;
+}
+
+.subtotal {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    text-align: right;
+}
+
+.checkout {
+    background: #001d6e;
+    color: white;
+    font-size: 18px;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 20px;
+    text-align: center;
+}
+
+.checkout button:hover {
+    background: rgb(0, 46, 146);
+}

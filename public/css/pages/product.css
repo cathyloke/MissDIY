@@ -1,0 +1,505 @@
+/* Category */
+.category-breadcrumb {
+    padding: 1rem 2rem;
+    font-size: 17px;
+    font-family: 'Cormorant Garamond', serif;
+    color: #3E424B;
+    background-color: #eeeeee;
+    display: flex;
+    align-items: center;
+}
+
+.category-breadcrumb a {
+    color: #5A78F0;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 20px;
+}
+
+.category-breadcrumb span {
+    margin: 0 0.5rem;
+}
+
+.category-breadcrumb button {
+    border: none; 
+    background: none; 
+    padding: 30px; 
+    outline: none;
+    color: #3E424B; 
+    font-size: 20px; 
+    position: absolute;
+    right: 0;
+}
+
+.create-product-btn-container {
+    margin-left: auto; 
+    margin-top: 10px;
+    padding: 8px 16px; 
+    
+}
+
+.create-product-btn {
+    background-color: #4CAF50; 
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.create-product-btn:hover {
+    background-color: #45a049;
+}
+
+/* Fliter Sliding Window */
+.filter-panel {
+    position: fixed;
+    right: -400px; 
+    top: 0;
+    width: 300px; 
+    height: 100%;
+    background-color: #C4C3D0;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+    padding: 20px;
+    transition: right 0.3s ease-in-out;
+    font-size: 17px;
+    font-family: 'Cormorant Garamond', serif;
+    color: #3E424B;
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-panel.active {
+    right: 0;
+    z-index: 9999;
+}
+
+/* Updated CSS for the filter panel header */
+.filter-panel-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.back-button-container {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.filter-title {
+    text-align: center;
+    margin: 10px 0 20px 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px 10px;
+    color: #3E424B;
+    margin-bottom: 10px;
+}
+
+.filter-options {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 60px; 
+}
+
+.category-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.category-button {
+    padding: 8px 15px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.category-button.active {
+    background: #3E424B;
+    color: white;
+    border-color: #3E424B;
+}
+
+.price-sort-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.price-sort-button {
+    padding: 8px 15px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.price-sort-button.active {
+    background: #3E424B;
+    color: white;
+    border-color: #3E424B;
+}
+
+.apply-button-container {
+    position: absolute;
+    bottom: 55px;
+    left: 20px;
+    right: 20px;
+}
+
+.apply-button {
+    width: 100%;
+    padding: 12px;
+    background: #3E424B;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s ease;
+}
+
+.filter-panel .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    color: #3E424B;
+}
+
+/*Product*/
+.product-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    padding: 15px;
+    align-items: center;
+}
+
+.product-container div {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    background-color: #DBE2E9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-container div:hover {
+    transform: scale(1.05);
+}
+
+.product-name {
+    margin: 8px 0;
+    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    color: #353839;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 40px; 
+}
+
+.product-price {
+    margin: 8px 0;
+    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    color: #353839;
+    font-weight: normal;
+    margin-top: auto; 
+}
+
+.product-picture {
+    width: 250px;
+    height: 230px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 1200px) {
+    .product-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .product-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .product-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* show.blade.php */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background: #D7D2CB;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 700px;
+    max-height: 500px;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+.p-detail-image {
+    width: 350px;
+    height: 330px;
+    object-fit: contain;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-left: 10px;
+    padding-right: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.detail-info {
+    display: flex;
+    flex-direction: column; 
+}
+
+.price-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.5rem;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center; 
+    gap: 15px;
+}
+
+.quantity-label {
+    color: #353839;
+    font-size: 23px;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
+    padding: 7px;
+    border: 1px solid #DBE2E9;
+    border-radius: 4px;
+}
+
+.add-to-cart-btn {
+    margin-top: 20px;
+    background: #A7A6BA;
+    color: #353839;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.add-to-cart-btn:hover {
+    background: #C4C3D0;
+    transform: scale(1.05);
+}
+
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    font-size: 40px;
+    color: #353839;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+}
+
+.close-btn:hover {
+    color: #979788;
+}
+
+@media (max-width: 768px) {
+    .modal-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.edit-product-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.edit-product-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+input[type="text"],
+select,
+input[type="file"] {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+select:focus {
+    border-color: #007BFF;
+}
+
+.product-image-preview {
+    margin-top: 15px;
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.save-btn:hover {
+    background-color: #0056b3;
+}
+
+.back-to-list-btn {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-to-list-btn:hover {
+    text-decoration: underline;
+}
+
+.toggle-status {
+    display: flex;
+    gap: 15px;
+    margin: 10px 0;
+}
+
+.active-btn,
+.inactive-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.active-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.inactive-btn {
+    background-color: #ccc;
+    color: #444;
+}
+
+.active-btn:hover {
+    background-color: #218838;
+}
+
+.inactive-btn:hover {
+    background-color: #b0b0b0;
+}
+
+.text-danger {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}

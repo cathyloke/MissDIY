@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Sale;
 
 class User extends Authenticatable
 {
@@ -20,6 +21,10 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'contact_number',
+        'address',
+        'gender',
+        'type',
         'password',
     ];
 
@@ -41,4 +46,30 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class, 'userId', 'id');
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'userId', 'id');
+    }
+
+    public function saleDetails()
+    {
+        return $this->hasMany(SaleDetail::class, 'userId', 'id');
+    }
+
+    public function isAdmin()
+    {
+        return $this->type == 'admin';
+    }
+    
+    public function isCustomer()
+    {
+        return $this->type == 'customer';
+    }
 }

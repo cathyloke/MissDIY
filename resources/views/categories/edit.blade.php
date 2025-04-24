@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/pages/category.css') }}"/>
 <div class="container">
     <h3 class="header-title">Edit Category</h3>
     <h4 class="sub-header">Update the details below</h4>
@@ -29,8 +30,8 @@
             <span style="color: red">@error('description'){{ $message }}@enderror</span>
         </div>
 
-        <button type="submit" class="btn btn-restore">Update</button>
-        <a href="{{ route('categories.index') }}" class="btn btn-deactivate">Cancel</a>
+        <button type="submit" class="custom-restore-btn">Update</button>
+        <a href="{{ route('categories.index') }}" class="custom-deactivate-btn">Cancel</a>
     </form>
 </div>
 @endsection

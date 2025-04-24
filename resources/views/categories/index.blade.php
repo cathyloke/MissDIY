@@ -2,6 +2,8 @@
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/pages/category.css') }}"/>
+<script src="https://kit.fontawesome.com/25b5310acf.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <div class="category-container">
     <div class="flex justify-between items-center mb-4">
@@ -60,4 +62,26 @@
             @endforeach
         </tbody>
     </table>
+
+    <!-- Add to cart toast message-->
+    <!-- success -->
+    @if (session('success'))
+        <div id="successToast" class="toast position-fixed top-0 start-50 translate-middle-x"
+            style="z-index: 10000; margin-top: 50px;" role="alert" aria-live="assertive" aria-atomic="true"
+            data-bs-autohide="true" data-bs-delay="2000">
+            <div class="toast-body">
+                {{ session('success') }}
+            </div>
+        </div>
+    @endif
 </div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+            const toastEl = document.getElementById('successToast');
+            if (toastEl) {
+                const toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
+        });
+</script>

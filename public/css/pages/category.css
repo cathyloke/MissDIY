@@ -123,6 +123,7 @@ tr:hover {
 }
 
 .custom-deactivate-btn {
+    text-decoration: none;
     margin-top: 10px;
     background-color: #dc3545;
     color: white;

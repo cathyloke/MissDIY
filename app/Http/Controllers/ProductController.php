@@ -110,8 +110,8 @@ class ProductController extends Controller
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('images/products'), $imageName);
-            $product->image = $imageName;
-        }        
+            $product->image = 'products/' . $imageName;
+        }
 
         $product->save();
 

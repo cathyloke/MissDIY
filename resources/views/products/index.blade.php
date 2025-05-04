@@ -85,7 +85,7 @@
     <div class="product-container">
         @foreach ($products as $product)
             <div class="product-card" data-product-id="{{ $product->id }}">
-                <img class="product-picture" src="{{ asset('images/products/' . $product->image) }}"
+                <img class="product-picture" src="{{ asset('images/' . $product->image) }}"
                     alt="{{ $product->name }}">
                 <p class="product-name">{{ $product->name }}</p>
                 <p class="product-price">${{ number_format($product->price, 2) }}</p>

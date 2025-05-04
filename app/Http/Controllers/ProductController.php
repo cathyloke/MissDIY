@@ -107,8 +107,10 @@ class ProductController extends Controller
         $product->categoryId = $request->categoryId; 
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
-            $product->image = basename($imagePath);
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images/products'), $imageName);
+            $product->image = 'products/' . $imageName;
         }
 
         $product->save();
